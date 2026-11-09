@@ -115,7 +115,7 @@ def head(title, desc, path, extra_ld=None):
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{ld}</script>
-<link rel="stylesheet" href="site.css?v=2">
+<link rel="stylesheet" href="site.css?v=3">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
