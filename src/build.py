@@ -107,7 +107,7 @@ def head(title, desc, path, extra_ld=None):
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/archivo-x.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin>
 <meta property="og:type" content="website"><meta property="og:site_name" content="Ad Pro Advertising">
 <meta property="og:title" content="{t}"><meta property="og:description" content="{d}">
@@ -116,9 +116,9 @@ def head(title, desc, path, extra_ld=None):
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{ld}</script>
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="site.css?v=4">
+<link rel="stylesheet" href="site.css?v=5">
 <script src="lenis.min.js" defer></script>
-<script src="site.js?v=4" defer></script>
+<script src="site.js?v=5" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

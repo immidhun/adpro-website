@@ -1,11 +1,11 @@
 /* Ad Pro Advertising, site styles v2 (Nov 2026) */
-@font-face{font-family:"Archivo X";src:url(fonts/archivo-x.woff2) format("woff2");font-weight:600 900;font-stretch:112% 125%;font-display:swap}
+@font-face{font-family:"Bricolage";src:url(fonts/bricolage.woff2) format("woff2");font-weight:200 800;font-display:swap}
 @font-face{font-family:"Jakarta";src:url(fonts/jakarta.woff2) format("woff2");font-weight:200 800;font-display:swap}
 
 :root{
   --ink:#0D0D0D; --paper:#FFFFFF; --mist:#F2F4F7; --line:#E2E6EB;
   --sky:#4BA4F4; --red:#E73A2A; --deep:#1A6FC2; --deepred:#C92E20; --steel:#5A636C;
-  --disp:"Archivo X","Arial Black",Arial,sans-serif;
+  --disp:"Bricolage","Helvetica Neue",Arial,sans-serif;
   --text:"Jakarta",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
   --w:1200px; --gut:clamp(20px,4vw,40px);
   --cut:14px;
@@ -24,13 +24,13 @@ h1,h2,h3{margin:0}
 :focus-visible{outline:3px solid var(--sky);outline-offset:3px}
 
 /* type */
-.d1,.d2{font-family:var(--disp);font-stretch:125%;font-weight:800;letter-spacing:-.015em;text-wrap:balance}
-.d1{font-size:clamp(2.4rem,min(4.6vw,8.4vh),4.4rem);line-height:1.02}
-.d2{font-size:clamp(1.75rem,3.1vw,2.7rem);line-height:1.08}
-.d3{font-family:var(--disp);font-stretch:118%;font-weight:750;font-size:clamp(1.3rem,2vw,1.6rem);line-height:1.15;letter-spacing:-.005em}
+.d1,.d2{font-family:var(--disp);font-weight:700;letter-spacing:-.035em;text-wrap:balance}
+.d1{font-size:clamp(2.6rem,min(5.2vw,9.2vh),4.9rem);line-height:.98}
+.d2{font-size:clamp(1.9rem,3.4vw,3rem);line-height:1.02}
+.d3{font-family:var(--disp);font-weight:700;font-size:clamp(1.4rem,2.1vw,1.75rem);line-height:1.12;letter-spacing:-.025em}
 .lede{font-size:clamp(1.08rem,1.5vw,1.25rem);line-height:1.55;color:#2a2f35;max-width:58ch}
 .small{font-size:.9rem;color:var(--steel)}
-.num{font-family:var(--disp);font-stretch:125%;font-weight:800;letter-spacing:.01em;white-space:nowrap}
+.num{font-family:var(--disp);font-weight:700;letter-spacing:-.01em;white-space:nowrap}
 
 /* buttons: the 45deg cut corner comes from the logo */
 .btn{display:inline-flex;align-items:center;gap:.6em;padding:.95em 1.35em;font:700 1rem/1 var(--text);text-decoration:none;border:0;cursor:pointer;
@@ -137,7 +137,7 @@ h1,h2,h3{margin:0}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);counter-reset:s;border-top:2px solid var(--ink)}
 .steps li{list-style:none;padding:28px 24px 8px 0;counter-increment:s}
 .steps li+li{padding-left:24px;border-left:1px solid var(--line)}
-.steps li::before{content:counter(s);display:block;font:800 2.6rem/1 var(--disp);font-stretch:125%;color:var(--sky);margin-bottom:18px}
+.steps li::before{content:counter(s);display:block;font:700 2.8rem/1 var(--disp);letter-spacing:-.03em;color:var(--sky);margin-bottom:18px}
 .steps li:nth-child(even)::before{color:var(--red)}
 .steps h3{font-size:1.15rem;font-weight:700;margin-bottom:8px}
 .steps p{color:#3a4048;font-size:.98rem}
@@ -145,10 +145,10 @@ ol.steps{margin:0;padding:0}
 
 /* product band */
 .prod{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,64px);align-items:center}
-.price{display:inline-block;font:800 1.05rem/1 var(--disp);font-stretch:118%;background:var(--ink);color:#fff;padding:10px 14px;margin-bottom:20px}
+.price{display:inline-block;font:700 1.1rem/1 var(--disp);background:var(--ink);color:#fff;padding:10px 14px;margin-bottom:20px}
 .tv{background:var(--ink);padding:18px;aspect-ratio:16/10;display:flex;flex-direction:column;gap:10px;color:#fff;clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%)}
 .tv .t{display:flex;justify-content:space-between;font-size:.8rem;color:#9aa4ae}
-.tv .t b{color:#fff;font-family:var(--disp);font-stretch:118%}
+.tv .t b{color:#fff;font-family:var(--disp);}
 .tv .g{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .tv .g span{background:#1d2228;padding:8px;font-size:.72rem;font-weight:700;display:flex;align-items:flex-end;border-top:3px solid var(--sky)}
 .tv .g span.l{border-color:var(--red);color:#ffb3aa}
@@ -185,7 +185,7 @@ ol.steps{margin:0;padding:0}
 .layout{display:grid;grid-template-columns:1fr 340px;gap:clamp(32px,5vw,72px);align-items:start}
 .prose{max-width:68ch}
 .prose section+section{margin-top:44px}
-.prose h2{font-family:var(--disp);font-stretch:118%;font-weight:750;font-size:1.55rem;line-height:1.2;margin-bottom:14px}
+.prose h2{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;font-size:1.7rem;line-height:1.2;margin-bottom:14px}
 .prose ul{padding:0;margin:0 0 1em;list-style:none}
 .prose li{padding-left:28px;position:relative;margin-bottom:10px}
 .prose li::before{content:"";position:absolute;left:2px;top:.62em;width:13px;height:6px;background:var(--sky);transform:skewX(-45deg)}
@@ -333,7 +333,7 @@ html.js [data-r].in{opacity:1;transform:none;clip-path:polygon(-30% 0,160% 0,130
 .mq{overflow:hidden;border-block:1px solid var(--line);padding:22px 0;background:#fff}
 .mq-t{display:flex;width:max-content;animation:mq 38s linear infinite}
 .mq:hover .mq-t{animation-play-state:paused}
-.mq-t span{font-family:var(--disp);font-stretch:125%;font-weight:800;font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.05;white-space:nowrap;padding-right:.5em;display:inline-flex;align-items:center;gap:.5em}
+.mq-t span{font-family:var(--disp);font-weight:700;letter-spacing:-.03em;font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.05;white-space:nowrap;padding-right:.5em;display:inline-flex;align-items:center;gap:.5em}
 .mq-t span:nth-child(odd){color:transparent;-webkit-text-stroke:1.5px var(--ink)}
 .mq-t span::after{content:"";width:.9em;height:.32em;background:var(--sky);transform:skewX(-45deg);display:inline-block}
 .mq-t span:nth-child(3n+2)::after{background:var(--red)}
@@ -343,7 +343,7 @@ html.js [data-r].in{opacity:1;transform:none;clip-path:polygon(-30% 0,160% 0,130
 .stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink)}
 .stats div{padding:30px 24px 6px 0}
 .stats div+div{padding-left:24px;border-left:1px solid var(--line)}
-.stats b{display:block;font-family:var(--disp);font-stretch:125%;font-weight:800;font-size:clamp(3rem,6vw,5.4rem);line-height:.95;letter-spacing:-.02em}
+.stats b{display:block;font-family:var(--disp);font-weight:700;font-size:clamp(3rem,6vw,5.4rem);line-height:.95;letter-spacing:-.02em}
 .stats b em{font-style:normal;color:var(--sky)}
 .stats div:nth-child(even) b em{color:var(--red)}
 .stats p{margin:14px 0 0;color:#3a4048;max-width:26ch}
