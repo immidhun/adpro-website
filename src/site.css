@@ -278,14 +278,14 @@ ol.steps{margin:0;padding:0}
 .wipe i:nth-child(1){background:var(--sky)}
 .wipe i:nth-child(2){background:var(--red)}
 .wipe i:nth-child(3){background:var(--ink)}
-html.js .wipe i{animation:wipeOut .75s cubic-bezier(.7,0,.2,1) both}
-html.js .wipe i:nth-child(1){animation-delay:.16s}
-html.js .wipe i:nth-child(2){animation-delay:.08s}
-html.js .wipe i:nth-child(3){animation-delay:0s}
-.wipe.go i{animation:wipeIn .5s cubic-bezier(.7,0,.2,1) both!important}
+html.arrive .wipe i{animation:wipeOut .45s cubic-bezier(.6,0,.2,1) both}
+html.arrive .wipe i:nth-child(1){animation-delay:.06s}
+html.arrive .wipe i:nth-child(2){animation-delay:.03s}
+html.arrive .wipe i:nth-child(3){animation-delay:0s}
+.wipe.go i{animation:wipeIn .3s cubic-bezier(.6,0,.2,1) both!important}
 .wipe.go i:nth-child(1){animation-delay:0s!important}
-.wipe.go i:nth-child(2){animation-delay:.07s!important}
-.wipe.go i:nth-child(3){animation-delay:.14s!important}
+.wipe.go i:nth-child(2){animation-delay:.03s!important}
+.wipe.go i:nth-child(3){animation-delay:.06s!important}
 @keyframes wipeOut{from{transform:translateX(0) skewX(-28deg)}to{transform:translateX(140%) skewX(-28deg)}}
 @keyframes wipeIn{from{transform:translateX(-140%) skewX(-28deg)}to{transform:translateX(0) skewX(-28deg)}}
 
@@ -298,25 +298,35 @@ html.js .wipe i:nth-child(3){animation-delay:0s}
 .hd.hide{transform:translateY(-100%)}
 
 /* headline words rise in */
-.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.w{display:inline-block}
 .w>span{display:inline-block}
-html.js .w>span{animation:wordUp .95s cubic-bezier(.2,.85,.2,1) both;animation-delay:calc(var(--i) * 60ms + .55s)}
-@keyframes wordUp{from{transform:translateY(108%) rotate(4deg)}to{transform:none}}
-html.js .hero .where,html.js .hero .lede,html.js .hero .ctas,html.js .ph .lede,html.js .ph .crumbs,html.js .ph .price,html.js .proof{animation:fadeUp .9s cubic-bezier(.2,.8,.2,1) both}
-html.js .hero .where,html.js .ph .crumbs{animation-delay:.45s}
-html.js .hero .lede,html.js .ph .lede,html.js .ph .price{animation-delay:.95s}
-html.js .hero .ctas{animation-delay:1.08s}
-html.js .proof{animation-delay:1.25s}
-@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-.hands .hb,.hands .hr{animation-delay:.5s!important}
+html.js h1 .w>span{animation:focusIn .75s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i) * 45ms + .08s)}
+@keyframes focusIn{from{opacity:0;filter:blur(14px);transform:translateY(.12em) scale(1.04)}to{opacity:1;filter:blur(0);transform:none}}
+html.js h2[data-r] .w>span{opacity:0;filter:blur(12px);transform:translateY(.1em) scale(1.03);
+  transition:opacity .5s ease,filter .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i) * 40ms)}
+html.js h2[data-r].in .w>span{opacity:1;filter:blur(0);transform:none}
+html.js h2[data-r]{opacity:1;filter:none;transform:none;transition:none}
+html.js .hero .where,html.js .hero .lede,html.js .hero .ctas,html.js .ph .lede,html.js .ph .crumbs,html.js .ph .price,html.js .proof{animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both}
+html.js .hero .where,html.js .ph .crumbs{animation-delay:0s}
+html.js .hero .lede,html.js .ph .lede,html.js .ph .price{animation-delay:.25s}
+html.js .hero .ctas{animation-delay:.35s}
+html.js .proof{animation-delay:.45s}
+@keyframes fadeUp{from{opacity:0;filter:blur(10px);transform:translateY(6px)}to{opacity:1;filter:blur(0);transform:none}}
+.hands .hb,.hands .hr{animation-delay:.05s!important;animation-duration:.9s!important}
 .hands svg.ready .hb,.hands svg.ready .hr{animation:none}
-.ph .cs .hb{animation:inB 1.2s cubic-bezier(.2,.8,.2,1) .45s both}
-.ph .cs .hr{animation:inR 1.2s cubic-bezier(.2,.8,.2,1) .45s both}
+.ph .cs .hb{animation:inB .9s cubic-bezier(.2,.8,.2,1) .05s both}
+.ph .cs .hr{animation:inR .9s cubic-bezier(.2,.8,.2,1) .05s both}
 
 /* diagonal reveal on scroll */
-html.js [data-r]{opacity:0;transform:translateY(34px);clip-path:polygon(-30% 0,-30% 0,-60% 100%,-60% 100%);
-  transition:opacity .7s ease var(--d,0ms),transform 1s cubic-bezier(.2,.8,.2,1) var(--d,0ms),clip-path 1.1s cubic-bezier(.65,0,.25,1) var(--d,0ms)}
-html.js [data-r].in{opacity:1;transform:none;clip-path:polygon(-30% 0,160% 0,130% 100%,-60% 100%)}
+html.js [data-r]{opacity:0;filter:blur(10px);transform:translateY(10px);
+  transition:opacity .55s ease var(--d,0ms),filter .65s cubic-bezier(.2,.7,.2,1) var(--d,0ms),transform .65s cubic-bezier(.2,.7,.2,1) var(--d,0ms)}
+html.js [data-r].in{opacity:1;filter:blur(0);transform:none}
+html.js [data-r].in.done{filter:none;transition:none}
+
+/* scroll-lit paragraphs: words brighten as you read down the page */
+.lw{transition:opacity .35s ease}
+html.js [data-lit] .lw{opacity:.16}
+html.js [data-lit] .lw.l{opacity:1}
 
 /* services: 45deg ink sweep on hover */
 .svc a{overflow:hidden;isolation:isolate}
@@ -356,7 +366,7 @@ html.js [data-r].in{opacity:1;transform:none;clip-path:polygon(-30% 0,160% 0,130
 
 /* steps draw their line in */
 .steps li{position:relative}
-.steps li::after{content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:var(--sky);transform:scaleX(0);transform-origin:0 50%;transition:transform 1s cubic-bezier(.65,0,.25,1) calc(var(--d,0ms) + .25s)}
+.steps li::after{content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:var(--sky);transform:scaleX(0);transform-origin:0 50%;transition:transform .7s cubic-bezier(.65,0,.25,1) calc(var(--d,0ms) + .1s)}
 .steps li:nth-child(even)::after{background:var(--red)}
 .steps li.in::after{transform:scaleX(1)}
 
@@ -393,7 +403,9 @@ html.has-cur,html.has-cur a,html.has-cur button,html.has-cur summary{cursor:none
 }
 @media (prefers-reduced-motion:reduce){
   .wipe,.cur,.prog{display:none}
-  html.js [data-r]{opacity:1;transform:none;clip-path:none;transition:none}
+  html.js [data-r]{opacity:1;transform:none;filter:none;transition:none}
+  html.js [data-lit] .lw{opacity:1}
+  html.js h2[data-r] .w>span{opacity:1;filter:none;transform:none;transition:none}
   html.js .w>span,html.js .hero .where,html.js .hero .lede,html.js .hero .ctas,html.js .ph .lede,html.js .ph .crumbs,html.js .ph .price,html.js .proof,.ph .cs .hb,.ph .cs .hr{animation:none}
   .mq-t{animation:none}
   .svc a::before{display:none}

@@ -115,10 +115,10 @@ def head(title, desc, path, extra_ld=None):
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{ld}</script>
-<script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="site.css?v=5">
+<script>(function(h){{h.classList.add('js');try{{if(sessionStorage.getItem('apw'))h.classList.add('arrive')}}catch(e){{}}}})(document.documentElement)</script>
+<link rel="stylesheet" href="site.css?v=7">
 <script src="lenis.min.js" defer></script>
-<script src="site.js?v=5" defer></script>
+<script src="site.js?v=7" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -146,7 +146,7 @@ def header(cur):
 
 def cta(h="Tell us what you sell and who buys it.", p="We'll tell you what would bring you more enquiries: a website, ads, creatives or an app. No obligation."):
     return f'''<section class="cta">{hands_svg("cs")}<div class="wrap">
-<div><h2 class="d2">{h}</h2><p>{p}</p></div>
+<div><h2 class="d2">{h}</h2><p data-lit>{p}</p></div>
 <div class="acts"><a class="call" href="tel:{TEL}"><small>Call or WhatsApp</small><span class="num">{PHONE}</span></a>
 <a class="btn btn-sky mag" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} Chat on WhatsApp</a></div>
 </div></section>
@@ -183,6 +183,9 @@ def words(t):
     return " ".join(out)
 def motion(b):
     b = re.sub(r'<h1 class="d1">([^<]*)</h1>', lambda m: '<h1 class="d1">' + words(m.group(1)) + '</h1>', b)
+    b = re.sub(r'<h2 class="d2"([^>]*)>([^<]*)</h2>', lambda m: '<h2 class="d2" data-r' + m.group(1) + '>' + words(m.group(2)) + '</h2>', b)
+    b = re.sub(r'(<div class="sec-h"><h2[^>]*>.*?</h2>)<p>', r'\1<p data-lit>', b)
+    b = b.replace('<p class="lede">', '<p class="lede" data-lit>')
     for x, y in [('<div class="sec-h">', '<div class="sec-h" data-r>'), ('<article class="case', '<article data-r class="case'),
                  ('<section><h2>', '<section data-r><h2>'), ('<details>', '<details data-r>'), ('<div class="box">', '<div class="box" data-r>'),
                  ('<div class="values"><div>', '<div class="values"><div data-r>'), ('</p></div>\n<div><h3>', '</p></div>\n<div data-r><h3>'),

@@ -25,19 +25,29 @@
 
   /* ---------- page wipe (two bands at 45deg, like the logo's hands) ---------- */
   var wipe = $('.wipe');
-  function wipeIn() { if (wipe && !reduce) { wipe.classList.remove('go'); wipe.classList.add('out'); } }
-  w.addEventListener('pageshow', function () { if (wipe) wipe.classList.remove('go'); });
+  function flag(v) { try { v ? sessionStorage.setItem('apw', '1') : sessionStorage.removeItem('apw'); } catch (e) {} }
+  flag(false);                                   // the arrival wipe plays once, only after an in-site click
+  w.addEventListener('pageshow', function (e) { if (wipe) wipe.classList.remove('go'); if (e.persisted) root.classList.remove('arrive'); });
+  /* prefetch the next page as soon as a link is hovered or touched, so it is ready before the wipe ends */
+  var pre = {};
+  function prefetch(e) {
+    var a = e.target.closest && e.target.closest('a'); if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (a.target === '_blank' || !/^[\w-]+\.html$/.test(href) || pre[href]) return;
+    pre[href] = 1; var l = d.createElement('link'); l.rel = 'prefetch'; l.href = href; d.head.appendChild(l);
+  }
+  d.addEventListener('mouseover', prefetch, { passive: true });
+  d.addEventListener('touchstart', prefetch, { passive: true });
   if (wipe && !reduce) {
     d.addEventListener('click', function (e) {
       var a = e.target.closest('a'); if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
       var href = a.getAttribute('href') || '';
       if (a.target === '_blank' || /^(#|tel:|mailto:|https?:)/.test(href) || !/\.html(#.*)?$/.test(href)) return;
       if (href.split('#')[0] === location.pathname.split('/').pop()) return;
-      e.preventDefault(); wipe.classList.remove('out'); void wipe.offsetWidth; wipe.classList.add('go');
-      setTimeout(function () { location.href = href; }, 520);
+      e.preventDefault(); flag(true); root.classList.remove('arrive'); void wipe.offsetWidth; wipe.classList.add('go');
+      setTimeout(function () { location.href = href; }, 300);
     });
   }
-  wipeIn();
 
   /* ---------- smooth scroll (desktop) ---------- */
   var lenis = null;
@@ -76,11 +86,29 @@
     var lim = innerHeight * 0.92;
     pending = pending.filter(function (el) {
       var r = el.getBoundingClientRect();
-      if (r.top < lim && r.bottom > -50) { el.classList.add('in'); return false; }
+      if (r.top < lim && r.bottom > -50) { el.classList.add('in'); setTimeout(function () { el.classList.add('done'); }, 1800); return false; }
       if (r.bottom <= -50) { el.classList.add('in'); return false; }
       return true;
     });
   }
+  /* ---------- scroll-lit paragraphs ---------- */
+  var lits = [];
+  if (!reduce) $$('[data-lit]').forEach(function (el) {
+    if (el.children.length) return;           // plain-text paragraphs only
+    el.innerHTML = el.textContent.trim().split(/\s+/).map(function (t) { return '<span class="lw">' + t + '</span>'; }).join(' ');
+    lits.push({ el: el, ws: $$('.lw', el), n: -1 });
+  });
+  function lightUp() {
+    var vh = innerHeight;
+    lits.forEach(function (o) {
+      var r = o.el.getBoundingClientRect();
+      var p = (vh * 0.88 - r.top) / (vh * 0.5);          // starts lighting at 88% of screen, done by 38%
+      p = Math.max(0, Math.min(1, p));
+      var n = Math.round(p * o.ws.length);
+      if (n !== o.n) { o.ws.forEach(function (w, i) { w.classList.toggle('l', i < n); }); o.n = n; }
+    });
+  }
+
   /* ---------- counters ---------- */
   $$('[data-count]').forEach(function (el) {
     var to = +el.getAttribute('data-count');
@@ -177,7 +205,7 @@
     if (lenis) lenis.raf(t);
     var y = lenis ? lenis.scroll : w.scrollY;
     if (y !== lastY) onScroll(y);
-    parallax(); reveal();
+    parallax(); reveal(); lightUp();
     requestAnimationFrame(raf);
   }
   onScroll(w.scrollY); requestAnimationFrame(raf);
