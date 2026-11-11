@@ -115,10 +115,14 @@ def head(title, desc, path, extra_ld=None):
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">{ld}</script>
-<link rel="stylesheet" href="site.css?v=3">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="site.css?v=4">
+<script src="lenis.min.js" defer></script>
+<script src="site.js?v=4" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
+<div class="wipe" aria-hidden="true"><i></i><i></i><i></i></div><div class="prog" aria-hidden="true"><i></i></div><div class="cur" aria-hidden="true"><span></span></div>
 '''
 
 def header(cur):
@@ -144,7 +148,7 @@ def cta(h="Tell us what you sell and who buys it.", p="We'll tell you what would
     return f'''<section class="cta">{hands_svg("cs")}<div class="wrap">
 <div><h2 class="d2">{h}</h2><p>{p}</p></div>
 <div class="acts"><a class="call" href="tel:{TEL}"><small>Call or WhatsApp</small><span class="num">{PHONE}</span></a>
-<a class="btn btn-sky" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} Chat on WhatsApp</a></div>
+<a class="btn btn-sky mag" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} Chat on WhatsApp</a></div>
 </div></section>
 '''
 
@@ -167,20 +171,26 @@ def footer():
 </div></footer>
 <a class="wafab" href="{wa()}" target="_blank" rel="noopener" aria-label="Chat with Ad Pro on WhatsApp">{WA_ICON}</a>
 <nav class="mbar" aria-label="Quick contact"><a class="c" href="tel:{TEL}"><small>Call or WhatsApp</small><span class="num">{PHONE}</span></a><a class="w" href="{wa()}" target="_blank" rel="noopener" aria-label="WhatsApp Ad Pro">{WA_ICON}</a></nav>
-<script>
-(function(){{var b=document.querySelector('.menu'),n=document.getElementById('nav');
-if(b)b.addEventListener('click',function(){{var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o)}});
-document.querySelectorAll('.dd>button').forEach(function(x){{x.addEventListener('click',function(){{var o=x.parentNode.classList.toggle('open');x.setAttribute('aria-expanded',o)}})}});
-var h=document.querySelector('.hd');var s=function(){{h.classList.toggle('scrolled',window.scrollY>8)}};window.addEventListener('scroll',s,{{passive:true}});s();
-var f=document.getElementById('qf');if(f)f.addEventListener('submit',function(e){{e.preventDefault();var g=function(i){{var x=document.getElementById(i);return x?x.value.trim():''}};
-var m='Hello Ad Pro,\\n\\nName: '+g('n')+'\\nBusiness: '+g('b')+'\\nPlace: '+g('p')+'\\nNeed: '+g('s')+'\\n\\n'+g('m');
-window.open('https://wa.me/{WA}?text='+encodeURIComponent(m),'_blank','noopener')}});}})();
-</script>
 </body>
 </html>
 '''
 
+import re
+def words(t):
+    out, i = [], 0
+    for wd in t.split(" "):
+        out.append(f'<span class="w"><span style="--i:{i}">{wd}</span></span>'); i += 1
+    return " ".join(out)
+def motion(b):
+    b = re.sub(r'<h1 class="d1">([^<]*)</h1>', lambda m: '<h1 class="d1">' + words(m.group(1)) + '</h1>', b)
+    for x, y in [('<div class="sec-h">', '<div class="sec-h" data-r>'), ('<article class="case', '<article data-r class="case'),
+                 ('<section><h2>', '<section data-r><h2>'), ('<details>', '<details data-r>'), ('<div class="box">', '<div class="box" data-r>'),
+                 ('<div class="values"><div>', '<div class="values"><div data-r>'), ('</p></div>\n<div><h3>', '</p></div>\n<div data-r><h3>'),
+                 ('<div class="acts">', '<div class="acts" data-r>')]:
+        b = b.replace(x, y)
+    return b
 def page(path, title, desc, body, extra_ld=None):
+    body = motion(body)
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, path), "w").write(head(title, desc, path, extra_ld) + header(path) + body + footer())
 
@@ -227,18 +237,27 @@ def inner(path, name, h1, lede, sections, faqs, wa_msg, side_title="Talk to us a
 def ul(items): return "<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>"
 
 # ---------------- HOME ----------------
-svc_rows = "".join(f'<a href="{s[0]}"><span class="d3">{html.escape(s[1])}</span><p>{html.escape(s[3])}</p><span class="go">{ARROW}</span></a>' for s in SERVICES)
-svc_rows += f'<a href="batchboard.html"><span class="d3">BatchBoard<span class="tagp">Product</span></span><p>Live batch attendance on your lobby TV, with your ads in between. &#8377;5,000 one-time.</p><span class="go">{ARROW}</span></a>'
+_mq_items = ["Websites", "Local SEO", "Meta ads", "Google ads", "Posters", "Malayalam reels", "Apps", "BatchBoard"]
+_mq = "".join(f"<span>{x}</span>" for x in _mq_items)
+MARQUEE = f'<div class="mq" aria-hidden="true"><div class="mq-t">{_mq}{_mq}</div></div>'
+_stats = [(65, "+", "pages hand-coded for clients, across three live sites"),
+          (28, "", "pages moved for one client, with every Google ranking kept"),
+          (4, "", "platforms we build apps for: Android, iPhone, web and Windows"),
+          (2, "", "languages in every creative: Malayalam and English")]
+STATS = "".join(f'<div data-r><b><span data-count="{n}">{n}</span><em>{suf}</em></b><p>{t}</p></div>' for n, suf, t in _stats)
+svc_rows = "".join(f'<a data-r href="{s[0]}"><span class="d3">{html.escape(s[1])}</span><p>{html.escape(s[3])}</p><span class="go">{ARROW}</span></a>' for s in SERVICES)
+svc_rows += f'<a data-r href="batchboard.html"><span class="d3">BatchBoard<span class="tagp">Product</span></span><p>Live batch attendance on your lobby TV, with your ads in between. &#8377;5,000 one-time.</p><span class="go">{ARROW}</span></a>'
 proof = "".join(f'<a href="#{c["id"]}"><b>{html.escape(c["client"].split(",")[0].replace(" and Rehabilitation Centre",""))}</b><span>{html.escape(c["host"] if "." in c["host"] else "Live preview site")}</span></a>' for c in CASES)
 home = f'''<section class="hero"><div class="wrap hero-grid">
 <div><p class="where"><i></i>Digital marketing studio in Charummood, Alappuzha</p>
 <h1 class="d1">Websites, ads and apps that bring in enquiries.</h1>
 <p class="lede">We build fast websites that rank locally, run Facebook, Instagram and Google ads measured on real leads, design posters and Malayalam reels, and develop apps. All in-house, all for one result: more of the right people calling you.</p>
-<div class="ctas"><a class="btn btn-ink" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} Chat on WhatsApp</a><a class="btn btn-line" href="work.html">See our work</a></div></div>
+<div class="ctas"><a class="btn btn-ink mag" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} Chat on WhatsApp</a><a class="btn btn-line" href="work.html">See our work</a></div></div>
 <div class="hands">{hands_svg()}</div>
 </div>
 <div class="proof"><div class="wrap"><span class="lab">Live client work</span>{proof}</div></div>
 </section>
+{MARQUEE}
 
 <section class="sec"><div class="wrap">
 <div class="sec-h"><h2 class="d2">One team for the whole job.</h2><p>The website, the ads that send people to it, the creatives inside those ads, and the app behind them. One team answers for the result.</p></div>
@@ -251,22 +270,27 @@ home = f'''<section class="hero"><div class="wrap hero-grid">
 <p style="margin-top:40px"><a class="btn btn-sky" href="work.html">Read the full case studies {ARROW}</a></p>
 </div></section>
 
-<section class="sec"><div class="wrap split">
-<div><h2 class="d2">Every website ships with the full local SEO package.</h2><p class="lede">Not an upgrade or a monthly add-on. A website nobody finds on Google doesn't bring in enquiries, so this is part of every site we deliver.</p>
-<a class="link" href="website-design-local-seo.html">How our websites work</a></div>
-<ul class="ticks">{"".join(f"<li>{i}</li>" for i in INCLUDES)}</ul>
+<section class="sec"><div class="wrap">
+<div class="sec-h"><h2 class="d2">Numbers from real projects.</h2><p>No invented figures. These come from the client work above.</p></div>
+<div class="stats">{STATS}</div>
 </div></section>
 
-<section class="sec mist"><div class="wrap">
+<section class="sec mist"><div class="wrap split">
+<div><h2 class="d2">Every website ships with the full local SEO package.</h2><p class="lede">Not an upgrade or a monthly add-on. A website nobody finds on Google doesn't bring in enquiries, so this is part of every site we deliver.</p>
+<a class="link" href="website-design-local-seo.html">How our websites work</a></div>
+<ul class="ticks">{"".join(f"<li data-r>{i}</li>" for i in INCLUDES)}</ul>
+</div></section>
+
+<section class="sec"><div class="wrap">
 <div class="sec-h"><h2 class="d2">How a project runs</h2><p>Four steps, and nothing goes live without your approval.</p></div>
-<ol class="steps">{"".join(f"<li><h3>{a}</h3><p>{b}</p></li>" for a, b in STEPS)}</ol>
+<ol class="steps">{"".join(f"<li data-r><h3>{a}</h3><p>{b}</p></li>" for a, b in STEPS)}</ol>
 </div></section>
 
 <section class="sec"><div class="wrap prod">
-<div><span class="price">&#8377;5,000 one-time</span><h2 class="d2" style="margin-bottom:18px">BatchBoard: attendance, live on your centre TV.</h2>
+<div data-r><span class="price">&#8377;5,000 one-time</span><h2 class="d2" style="margin-bottom:18px">BatchBoard: attendance, live on your centre TV.</h2>
 <p class="lede">Tutors mark attendance on their phone and the lobby TV shows each batch live. Between batches it plays your ads. Built for training and coaching centres, no subscription.</p>
 <a class="btn btn-ink" href="batchboard.html">See how BatchBoard works {ARROW}</a></div>
-<div class="tv" aria-hidden="true"><div class="t"><b>Batch C, 10:00</b><span>8 in, 1 on leave, 3 to arrive</span></div>
+<div class="tv" data-live aria-hidden="true"><div class="t"><b>Batch C, 10:00</b><span>8 in, 1 on leave, 3 to arrive</span></div>
 <div class="g"><span>Anu R.</span><span>Rahul K.</span><span>Sneha M.</span><span class="l">Arjun P. leave</span><span>Fathima S.</span><span>Vishnu T.</span><span class="w">Nikhil A.</span><span>Devika B.</span><span>Aswin J.</span><span class="w">Meera L.</span><span>Sanjay V.</span><span class="w">Ann M.</span></div></div>
 </div></section>
 {cta()}'''
@@ -396,6 +420,9 @@ open(os.path.join(OUT, "404.html"), "w").write(s)
 
 # ---------------- static files ----------------
 shutil.copy("site.css", f"{OUT}/site.css")
+shutil.copy("site.js", f"{OUT}/site.js")
+_l = open("dl/lenis/package/dist/lenis.min.js").read().split("//# sourceMappingURL")[0]
+open(f"{OUT}/lenis.min.js", "w").write(_l)
 pages = ["index.html"] + [s[0] for s in SERVICES] + ["batchboard.html", "work.html", "about.html", "contact.html"]
 sm = "".join(f"<url><loc>{SITE}/{'' if p=='index.html' else p}</loc><lastmod>2026-11-09</lastmod></url>" for p in pages)
 open(f"{OUT}/sitemap.xml", "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n')
