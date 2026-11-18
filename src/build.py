@@ -19,10 +19,12 @@ ASSET_V = "8"            # bump when site.css or site.js changes
 # Fill these in once confirmed. They must match the Google Business Profile exactly.
 # Empty values are left out of the structured data, so nothing is guessed.
 BUSINESS = {
-    "street": "", "postal": "", "lat": "", "lng": "",   # lat/lng: at least 5 decimal places
-    "maps_url": "",                                      # Google Maps link of the business profile
+    "street": "2nd Floor, Nebo Tower, KP Road", "postal": "690505", "lat": "9.17304", "lng": "76.60624",   # lat/lng: at least 5 decimal places
+    "maps_url": "https://www.google.com/maps/search/?api=1&query=Nebo+Tower%2C+KP+Road%2C+Charummoodu%2C+Kerala+690505",   # replace with the Business Profile link once it exists
     "hours": [],  # e.g. [{"days": ["Monday", "Tuesday"], "opens": "09:00", "closes": "18:00"}]
 }
+
+ADDRESS = f'{BUSINESS["street"]}, Charummood, Alappuzha, Kerala {BUSINESS["postal"]}'
 
 def wa(msg="Hello Ad Pro, I'd like to discuss a project."):
     from urllib.parse import quote
@@ -112,7 +114,7 @@ def org_ld():
            "description": "Digital marketing studio in Charummood, Alappuzha: websites with local SEO, Meta and Google ads, posters, Malayalam video ads and app development.",
            "logo": SITE + "/logo.png", "image": SITE + "/og-image.jpg", "telephone": TEL,
            "slogan": "Websites, ads and apps that bring in enquiries", "address": addr,
-           "areaServed": [{"@type": "AdministrativeArea", "name": "Alappuzha district"}, {"@type": "State", "name": "Kerala"}, {"@type": "Country", "name": "India"}],
+           "areaServed": [{"@type": "State", "name": "Kerala"}, {"@type": "Country", "name": "India"}],
            "contactPoint": {"@type": "ContactPoint", "telephone": TEL, "contactType": "customer service", "availableLanguage": ["English", "Malayalam"]},
            "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": s[1], "url": f"{SITE}/{s[0]}"}} for s in SERVICES],
            "knowsLanguage": ["en", "ml"], "sameAs": ["https://www.instagram.com/adpro_advt/"]}
@@ -200,8 +202,8 @@ def footer():
 <footer class="ft"><div class="wrap">
 <div class="cols">
 <div><a href="index.html" aria-label="Ad Pro Advertising, home"><img src="logo-reverse.svg" width="180" height="85" alt="Ad Pro Digital Marketing"></a>
-<p>Websites, local SEO, ads, posters, video and apps for businesses in Charummood, across Kerala and beyond.</p>
-<p>Charummood, Alappuzha, Kerala</p></div>
+<p>Websites, local SEO, ads, posters, video and apps for businesses across Kerala and beyond.</p>
+<p>{ADDRESS}</p></div>
 <div><h3>Services</h3><ul>{svc}</ul></div>
 <div><h3>Contact</h3><ul>
 <li>Call or WhatsApp<br><a class="num" href="tel:{TEL}" style="color:#fff;font-size:1.3rem">{PHONE}</a></li>
@@ -290,7 +292,7 @@ def service_ld(path, name, desc):
                  "publisher": {"@id": SITE + "/#org"}}]
     return [{"@type": "Service", "name": name, "serviceType": name, "url": f"{SITE}/{path}", "description": desc,
              "provider": {"@id": SITE + "/#org"},
-             "areaServed": [{"@type": "AdministrativeArea", "name": "Alappuzha district"}, {"@type": "State", "name": "Kerala"}]}]
+             "areaServed": [{"@type": "State", "name": "Kerala"}, {"@type": "Country", "name": "India"}]}]
 
 def inner(path, name, h1, lede, sections, faqs, wa_msg, side_title="Talk to us about this",
           side_text="Tell us about your business on WhatsApp. We reply with what we would do and a quote.", price=None, title=None, desc=None):
@@ -379,8 +381,8 @@ home = f'''<section class="hero"><div class="wrap hero-grid">
 <p style="margin-top:32px"><a class="link" href="blog/index.html">Read all guides</a></p>
 </div></section>
 {cta()}'''
-page("index.html", "Ad Pro Advertising | Websites, SEO, Ads & Apps, Alappuzha",
-     "Ad Pro Advertising, Charummood, Alappuzha: hand-coded websites with local SEO, Meta & Google ads, posters, Malayalam video reels and app development.", home)
+page("index.html", "Ad Pro Advertising | Websites, SEO, Ads & Apps in Kerala",
+     "Ad Pro Advertising builds hand-coded websites with local SEO, runs Meta & Google ads, and makes posters, Malayalam reels and apps for businesses across Kerala.", home)
 
 # ---------------- SERVICE PAGES ----------------
 inner("website-design-local-seo.html", "Websites & Local SEO", "Get found on Google by customers nearby.",
@@ -394,14 +396,14 @@ inner("website-design-local-seo.html", "Websites & Local SEO", "Get found on Goo
             "Google Search Console and Google Analytics 4 connected", "WhatsApp enquiry button and forms that open a ready-written WhatsApp message"])),
        ("Locality and service pages", "<p>People search for <i>“home nurse in Koramangala”</i> or <i>“water bottle supplier Kottayam”</i>, not for your company name. So we build a page for each service you sell and each area you cover, each written for that search, so you can show up for it.</p>"),
        ("Moving from an old site without losing Google", "<p>If you already have a site that ranks, we list every existing address before touching anything. Pages keep their URL wherever possible and the rest get permanent (301) redirects, so the rankings you have already earned carry over.</p>"),
-       ("Website design in Alappuzha and across Kerala", "<p>We are based in Charummood and work with businesses around Mavelikkara, Kayamkulam, Haripad and Chengannur, across Alappuzha district and the rest of Kerala. We also build for clients outside the state, such as a home-care company in Bengaluru. Read our guide to <a href=\"blog/google-maps-listing-alappuzha-business.html\">getting your business on Google Maps</a>.</p>")],
+       ("Website design for businesses across Kerala", "<p>We are based in Charummood, Alappuzha, and build websites for businesses all over Kerala. There is no limit on where you can be: everything can be handled by phone and WhatsApp, and we already work with a home-care company in Bengaluru. Read our guide to <a href=\"blog/google-maps-listing-alappuzha-business.html\">getting your business on Google Maps</a>.</p>")],
       [("Can you rebuild my existing website?", "Yes. We pull your current sitemap first, keep the addresses that already rank, and redirect the rest, so a rebuild doesn't reset your Google position."),
        ("Do I need WordPress?", "No. Our sites are static HTML, so there's no WordPress admin, plugin updates or database to maintain. Content changes are made by us and re-uploaded."),
        ("Will my business show on Google Maps?", "We set up or clean up your Google Business Profile and keep your name, address and phone identical across the site and listings. That consistency is what Maps ranking relies on."),
        ("Where is the website hosted?", "On fast shared hosting with free SSL. We can use your existing hosting and domain, or arrange new ones for you.")],
       "Hello Ad Pro, I'm interested in Websites & Local SEO.",
-      title="Website Design & Local SEO in Alappuzha | Ad Pro Advertising",
-      desc="Fast, hand-coded business websites with full local SEO and Google Business Profile set-up, from Ad Pro Advertising in Charummood, Alappuzha.")
+      title="Website Design & Local SEO in Kerala | Ad Pro Advertising",
+      desc="Fast, hand-coded business websites with full local SEO and Google Business Profile set-up, for businesses across Kerala and beyond, from Ad Pro Advertising.")
 
 inner("meta-google-ads.html", "Meta & Google Ads", "Ads measured on enquiries, not likes.",
       "Facebook, Instagram and Google campaigns run for real enquiries, and checked against the leads you actually get.",
@@ -411,13 +413,13 @@ inner("meta-google-ads.html", "Meta & Google Ads", "Ads measured on enquiries, n
             "Offer campaigns switched on and off on time, so expired offers don't keep running", "Google Business Profile posts scheduled alongside the ads"])),
        ("Daily checks, honest reporting", "<p>We check spend and results every day and report what changed: spend pace against your monthly ceiling, cost per enquiry, and anything that needs a decision. No change to your budget or campaigns is made without your approval.</p>"),
        ("Small budgets, read carefully", "<p>At a few enquiries a week, one good or bad week means very little. We wait for a consistent pattern before cutting a platform or audience, rather than reacting to noise.</p>"),
-       ("Ads for businesses in Alappuzha and Kerala", "<p>We plan campaigns around the area your customers actually come from, whether that is a few kilometres around Charummood, a town such as Kayamkulam or Mavelikkara, or the whole of Kerala. See how we <a href=\"blog/whatsapp-ads-real-enquiries.html\">track which WhatsApp ads bring real enquiries</a>.</p>")],
+       ("Ads for businesses across Kerala", "<p>We work with businesses all over Kerala and beyond, and plan each campaign around the area your customers actually come from, whether that is one town, one district or the whole state. See how we <a href=\"blog/whatsapp-ads-real-enquiries.html\">track which WhatsApp ads bring real enquiries</a>.</p>")],
       [("Do you need access to my ad account?", "Yes, as a partner on your Meta Business account or Google Ads account. The account and its payment method stay in your name."),
        ("Will you change my budget without asking?", "No. We recommend changes with the reason behind them, and you approve them."),
        ("Can ads send people to WhatsApp?", "Yes. Most of our local campaigns use WhatsApp as the destination, because that's where people in Kerala prefer to ask questions.")],
       "Hello Ad Pro, I'm interested in Meta & Google Ads.",
-      title="Meta & Google Ads in Alappuzha, Kerala | Ad Pro Advertising",
-      desc="Facebook, Instagram, WhatsApp and Google ad campaigns for Kerala businesses, managed from Alappuzha and checked against the enquiries you actually receive.")
+      title="Meta & Google Ads Management in Kerala | Ad Pro Advertising",
+      desc="Facebook, Instagram, WhatsApp and Google ad campaigns for businesses across Kerala, checked against the enquiries you actually receive.")
 
 inner("posters-video-ads.html", "Posters & Video Ads", "Posters and reels in your customer's language.",
       "Posters, social creatives and short motion-graphics reels, in Malayalam and English, sized for every placement.",
@@ -425,13 +427,13 @@ inner("posters-video-ads.html", "Posters & Video Ads", "Posters and reels in you
        ("Motion-graphics video ads", "<p>15-second vertical reels built for Instagram and Facebook: bold animated text, your offer, and a clear call to action. We usually make two versions, one with the current offer and one evergreen, so the ad keeps running after the offer ends.</p>"),
        ("Malayalam and English", "<p>On-screen text in Malayalam and English, with an optional Malayalam voice-over. Your audience hears the offer in their own language even with captions off.</p>"),
        ("Corporate artwork, localised", "<p>Franchise and dealer businesses often get head-office creatives carrying the corporate phone number. We swap in your branch name, number and website before anything goes live.</p>"),
-       ("Made in Charummood, for Kerala audiences", "<p>Our design and video work is done in-house in Charummood, Alappuzha, for businesses across Kerala. Not sure which language to use? Read <a href=\"blog/malayalam-or-english-ads.html\">how to choose between Malayalam and English</a>.</p>")],
+       ("Made in-house, for audiences across Kerala", "<p>Our design and video work is done in-house in Charummood, Alappuzha, for businesses all over Kerala and beyond. Not sure which language to use? Read <a href=\"blog/malayalam-or-english-ads.html\">how to choose between Malayalam and English</a>.</p>")],
       [("Which sizes do I get?", "Square (1:1), story/reel (9:16) and landscape where needed, so the same creative works in feed, stories and reels."),
        ("Can you use our existing brand guidelines?", "Yes. Send the guideline PDF and logo files; we follow the colours, fonts and logo rules in them."),
        ("Do you make Malayalam voice-overs?", "Yes. Short reels can carry a Malayalam voice-over as well as Malayalam on-screen text.")],
       "Hello Ad Pro, I'm interested in Posters & Video Ads.",
-      title="Posters & Malayalam Video Ads, Alappuzha | Ad Pro Advertising",
-      desc="Posters, social media creatives and short video ads in Malayalam and English, designed in-house by Ad Pro Advertising in Charummood, Alappuzha.")
+      title="Posters & Malayalam Video Ads in Kerala | Ad Pro Advertising",
+      desc="Posters, social media creatives and short video ads in Malayalam and English, designed in-house by Ad Pro Advertising for businesses across Kerala.")
 
 inner("app-development.html", "App Development", "Your app. On every screen.",
       "Android, iPhone, web and Windows apps, designed, built and launched by Ad Pro. Tell us your idea and we take care of the rest.",
@@ -446,8 +448,8 @@ inner("app-development.html", "App Development", "Your app. On every screen.",
        ("Who owns the app?", "You do. Custom apps are built for your business and handed over to you."),
        ("Can the app read data we already keep in Google Sheets?", "Yes. Many of our builds read from and write to the sheets your team already fills in, so nobody has to learn a new system.")],
       "Hello Ad Pro, I'm interested in App Development.",
-      title="App Development in Alappuzha, Kerala | Ad Pro Advertising",
-      desc="Android, iPhone, web and Windows apps built around how your staff work, by Ad Pro Advertising in Charummood, Alappuzha. Tell us your idea.")
+      title="App Development Company in Kerala | Ad Pro Advertising",
+      desc="Android, iPhone, web and Windows apps built around how your staff work, by Ad Pro Advertising, for businesses in Kerala and beyond. Tell us your idea.")
 
 inner("batchboard.html", "BatchBoard", "Attendance, live on your centre TV.",
       "A lobby TV app for computer and coaching centres: live batch attendance on screen, your ads in between.",
@@ -503,9 +505,9 @@ contact = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class=
 </form>
 <aside class="side"><div class="box dark"><h2>Call or WhatsApp</h2><p><a class="num" href="tel:{TEL}" style="color:#fff;font-size:1.7rem;text-decoration:none">{PHONE}</a></p>
 <a class="btn btn-sky" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} WhatsApp us</a></div>
-<div class="box"><h2>Find us</h2><p style="margin:0">Charummood, Alappuzha, Kerala</p><p class="small" style="margin:10px 0 0">Instagram <a class="link" href="https://www.instagram.com/adpro_advt/" target="_blank" rel="noopener">@adpro_advt</a></p></div></aside>
+<div class="box"><h2>Find us</h2><p style="margin:0">{ADDRESS}</p><p style="margin:10px 0 0"><a class="link" href="{BUSINESS["maps_url"]}" target="_blank" rel="noopener">Open in Google Maps</a></p><p class="small" style="margin:10px 0 0">Instagram <a class="link" href="https://www.instagram.com/adpro_advt/" target="_blank" rel="noopener">@adpro_advt</a></p></div></aside>
 </div></div></section>'''
-page("contact.html", "Contact Ad Pro Advertising | Call or WhatsApp 75609 21593", "Call or WhatsApp Ad Pro Advertising on 75609 21593, or send your project details through the contact form.", contact, crumbs_ld("Contact", "contact.html"))
+page("contact.html", "Contact Ad Pro Advertising | Call or WhatsApp 75609 21593", "Call or WhatsApp Ad Pro Advertising on 75609 21593, or visit us at Nebo Tower, KP Road, Charummood, Alappuzha. We work with businesses across Kerala.", contact, crumbs_ld("Contact", "contact.html"))
 
 # ---------------- 404 ----------------
 nf = f'''<section class="ph" style="border:0">{hands_svg("cs")}<div class="wrap"><h1 class="d1">This page isn't here.</h1>
@@ -524,7 +526,7 @@ blog_index = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div cla
 <h1 class="d1">Guides that help local businesses get found.</h1><p class="lede">Practical advice on Google, ads, creatives and apps, from the Ad Pro Advertising team in Charummood, Alappuzha.</p></div></section>
 <section class="sec"><div class="wrap"><div class="pgrid">{"".join(post_card(p, "h2") for p in POSTS)}</div></div></section>
 {cta()}'''
-blog_desc = "Plain-English guides on local SEO, Google Maps, website rebuilds, WhatsApp ads and Malayalam creatives for businesses in Alappuzha and across Kerala."
+blog_desc = "Plain-English guides on local SEO, Google Maps, website rebuilds, WhatsApp ads and Malayalam creatives for businesses across Kerala."
 blog_ld = [{"@type": "Blog", "@id": f"{SITE}/blog/#blog", "name": "Ad Pro Advertising blog", "url": f"{SITE}/blog/", "description": blog_desc, "inLanguage": "en-IN",
             "publisher": {"@id": SITE + "/#org"},
             "blogPost": [{"@type": "BlogPosting", "headline": p["title"], "url": f"{SITE}/{post_url(p)}", "datePublished": p["date"]} for p in POSTS]},
