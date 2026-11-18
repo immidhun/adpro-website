@@ -33,7 +33,7 @@
   function prefetch(e) {
     var a = e.target.closest && e.target.closest('a'); if (!a) return;
     var href = a.getAttribute('href') || '';
-    if (a.target === '_blank' || !/^[\w-]+\.html$/.test(href) || pre[href]) return;
+    if (a.target === '_blank' || !/^\/(?!\/)[^#]*$/.test(href) || pre[href]) return;
     pre[href] = 1; var l = d.createElement('link'); l.rel = 'prefetch'; l.href = href; d.head.appendChild(l);
   }
   d.addEventListener('mouseover', prefetch, { passive: true });
@@ -42,8 +42,8 @@
     d.addEventListener('click', function (e) {
       var a = e.target.closest('a'); if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
       var href = a.getAttribute('href') || '';
-      if (a.target === '_blank' || /^(#|tel:|mailto:|https?:)/.test(href) || !/\.html(#.*)?$/.test(href)) return;
-      if (href.split('#')[0] === location.pathname.split('/').pop()) return;
+      if (a.target === '_blank' || !/^\/(?!\/)/.test(href)) return;
+      if (href.split('#')[0] === location.pathname) return;
       e.preventDefault(); flag(true); root.classList.remove('arrive'); void wipe.offsetWidth; wipe.classList.add('go');
       setTimeout(function () { location.href = href; }, 300);
     });

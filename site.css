@@ -117,7 +117,7 @@ h1,h2,h3{margin:0}
 .shot img{width:100%;aspect-ratio:960/426;object-fit:cover;object-position:top}
 .shot:hover{border-color:var(--sky)}
 .case .kind{color:#9aa4ae;font-weight:600;font-size:.92rem;margin-bottom:10px}
-.case h3{margin-bottom:14px}
+.case h2,.case h3{margin-bottom:14px}
 .case p{color:#cfd5db}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding:0;list-style:none}
 .chips li{font-size:.82rem;font-weight:700;padding:6px 10px;border:1px solid rgba(255,255,255,.25)}
@@ -137,7 +137,7 @@ h1,h2,h3{margin:0}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);counter-reset:s;border-top:2px solid var(--ink)}
 .steps li{list-style:none;padding:28px 24px 8px 0;counter-increment:s}
 .steps li+li{padding-left:24px;border-left:1px solid var(--line)}
-.steps li::before{content:counter(s);display:block;font:700 2.8rem/1 var(--disp);letter-spacing:-.03em;color:var(--sky);margin-bottom:18px}
+.steps li::before{content:counter(s);display:block;font:700 2.8rem/1 var(--disp);letter-spacing:-.03em;color:var(--deep);margin-bottom:18px}
 .steps li:nth-child(even)::before{color:var(--red)}
 .steps h3{font-size:1.15rem;font-weight:700;margin-bottom:8px}
 .steps p{color:#3a4048;font-size:.98rem}
@@ -193,7 +193,7 @@ ol.steps{margin:0;padding:0}
 .side{position:sticky;top:110px;display:grid;gap:16px}
 .box{border:1px solid var(--line);padding:26px}
 .box.dark{background:var(--ink);color:#fff;border:0;clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%)}
-.box h3{font-size:1.15rem;margin-bottom:8px}
+.box h2,.box h3{font-size:1.15rem;margin-bottom:8px}
 .box.dark p{color:#c4cbd2}
 .box .btn{width:100%;justify-content:center;margin-top:10px}
 .box ul{list-style:none;margin:0;padding:0}
@@ -354,7 +354,7 @@ html.js [data-lit] .lw.l{opacity:1}
 .stats div{padding:30px 24px 6px 0}
 .stats div+div{padding-left:24px;border-left:1px solid var(--line)}
 .stats b{display:block;font-family:var(--disp);font-weight:700;font-size:clamp(3rem,6vw,5.4rem);line-height:.95;letter-spacing:-.02em}
-.stats b em{font-style:normal;color:var(--sky)}
+.stats b em{font-style:normal;color:var(--deep)}
 .stats div:nth-child(even) b em{color:var(--red)}
 .stats p{margin:14px 0 0;color:#3a4048;max-width:26ch}
 
@@ -382,6 +382,34 @@ html.js [data-lit] .lw.l{opacity:1}
 
 /* FAQ */
 .faq details p{overflow:hidden}
+
+/* blog */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,32px)}
+.pc{background:#fff;border:1px solid var(--line);transition:border-color .2s}
+.pc:hover{border-color:var(--ink)}
+.pc a{display:block;height:100%;text-decoration:none;padding-bottom:24px}
+.pc img{width:100%;aspect-ratio:1200/630;object-fit:cover;border-bottom:1px solid var(--line)}
+.pc-k{display:block;margin:20px 22px 8px;font-size:.86rem;font-weight:700;color:var(--deep)}
+.pc .d3{margin:0 22px 10px;font-size:1.32rem}
+.pc p{margin:0 22px;color:#3a4048;font-size:.95rem}
+.ph-post h1{max-width:21ch;font-size:clamp(2.2rem,4.2vw,3.5rem);line-height:1.04}
+.ph-post .lede{max-width:56ch}
+html.js .ph-post h1 .w>span,html.js .ph-post .lede,html.js .ph-post .crumbs{animation:none}
+html.js .ph-post [data-lit] .lw{opacity:1}
+.pmeta{margin:0;color:var(--steel);font-size:.92rem;font-weight:600}
+.post{min-width:0}
+.post h2{margin:44px 0 14px}
+.post>h2:first-of-type{margin-top:36px}
+.post ol{margin:0 0 1em;padding:0;list-style:none;counter-reset:n}
+.post ol li{counter-increment:n;padding-left:36px}
+.post ol li::before{content:counter(n);left:0;top:.08em;width:auto;height:auto;background:none;transform:none;font:700 1.1rem/1.5 var(--disp);color:var(--deep)}
+.post h3{font-family:var(--disp);font-weight:700;font-size:1.22rem;line-height:1.25;letter-spacing:-.015em;margin:26px 0 8px}
+.keys{background:var(--mist);padding:24px 26px 12px;border-left:4px solid var(--red)}
+.keys h2{margin:0 0 12px;font-size:1.25rem}
+.srcs{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);font-size:.92rem}
+.srcs h2{margin:0 0 10px;font-size:1.1rem}
+@media (max-width:900px){.pgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.pgrid{grid-template-columns:1fr}}
 
 /* custom cursor (desktop) */
 .cur{position:fixed;left:0;top:0;z-index:250;pointer-events:none;width:0;height:0;opacity:0}
