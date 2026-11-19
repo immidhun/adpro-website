@@ -16,7 +16,7 @@
  * POST {"messages":[{"role":"user","content":"..."}, ...]} -> {"reply":"..."}
  */
 
-const MODEL          = 'claude-opus-5-5';
+const MODEL          = 'claude-haiku-5-5';   // cheapest current model; plenty for answering from a fixed set of facts
 const EFFORT         = 'low';      // short website answers; raise to 'medium' if answers feel thin
 const MAX_TOKENS     = 2000;
 const MAX_USER_CHARS = 800;        // longest visitor message accepted
@@ -140,7 +140,6 @@ $payload = [
     'model'         => MODEL,
     'max_tokens'    => MAX_TOKENS,
     'output_config' => ['effort' => EFFORT],
-    'fallbacks'     => 'default',      // if a safety check declines, the API retries on a suitable model
     'system'        => [
         // The large, unchanging knowledge block is cached, so follow-up messages cost far less.
         ['type' => 'text', 'text' => file_get_contents(__DIR__ . '/knowledge.txt'), 'cache_control' => ['type' => 'ephemeral']],
@@ -159,7 +158,6 @@ curl_setopt_array($ch, [
         'content-type: application/json',
         'x-api-key: ' . $key,
         'anthropic-version: 2026-10-21',
-        'anthropic-beta: server-side-fallback-2026-07-01',
     ],
     CURLOPT_POSTFIELDS     => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
 ]);
