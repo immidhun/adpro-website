@@ -14,7 +14,7 @@ TEL = "+917560921593"
 OUT = "dist"
 YEAR = 2026
 LASTMOD = "2026-11-19"   # update when pages change; used in the sitemap
-ASSET_V = "8"            # bump when site.css or site.js changes
+ASSET_V = "9"            # bump when site.css or site.js changes
 
 # Fill these in once confirmed. They must match the Google Business Profile exactly.
 # Empty values are left out of the structured data, so nothing is guessed.
@@ -45,16 +45,37 @@ def hands_svg(cls="", label=False):
     return (f'<svg class="{cls}" viewBox="100 10 1080 615" aria-hidden="true" focusable="false">'
             f'<path class="hb" fill="#4BA4F4" d="{HB}"/><path class="hr" fill="#E73A2A" d="{HR}"/></svg>')
 
+# (path, name, short name, one-line summary, group, menu blurb)
 SERVICES = [
     ("website-design-local-seo.html", "Websites & Local SEO", "Websites",
-     "Fast hand-coded websites with the full local SEO package, so people searching nearby find you first."),
+     "Fast hand-coded websites with the full local SEO package, so people searching nearby find you first.", "grow",
+     "Fast websites that get found on Google"),
     ("meta-google-ads.html", "Meta & Google Ads", "Ads",
-     "Facebook, Instagram and Google campaigns judged on real enquiries, not likes."),
+     "Facebook, Instagram and Google campaigns judged on real enquiries, not likes.", "grow",
+     "Facebook, Instagram and Google campaigns"),
     ("posters-video-ads.html", "Posters & Video Ads", "Posters & video",
-     "Posters, social creatives and short reels in Malayalam and English, sized for every placement."),
+     "Posters, social creatives and short reels in Malayalam and English, sized for every placement.", "grow",
+     "Creatives and reels in Malayalam and English"),
+    ("ecommerce-website-development.html", "E-commerce Websites", "Online stores",
+     "Online stores that take UPI, card and cash-on-delivery payments, built to load fast and show up on Google.", "build",
+     "Online stores with UPI and card payments"),
+    ("whatsapp-business-automation.html", "WhatsApp Automation", "WhatsApp automation",
+     "Instant WhatsApp replies from your real prices and details, on the official platform, handing over to staff when it matters.", "build",
+     "Instant replies on the official WhatsApp platform"),
+    ("ai-chatbot-development.html", "AI Chat Assistants", "AI assistants",
+     "AI assistants for your website and WhatsApp that answer from your own information, in English or Malayalam.", "build",
+     "Assistants that answer from your own information"),
+    ("custom-software-development.html", "Custom Software & Dashboards", "Software",
+     "Enquiry trackers, billing, booking and staff tools, plus dashboards that show your numbers at a glance.", "build",
+     "Trackers, billing, booking and dashboards"),
     ("app-development.html", "App Development", "Apps",
-     "Android, iPhone, web and Windows apps, built around how your staff already work."),
+     "Android, iPhone, web and Windows apps, built around how your staff already work.", "build",
+     "Android, iPhone, web and Windows apps"),
+    ("website-maintenance-hosting.html", "Website Maintenance & Hosting", "Maintenance",
+     "Hosting, domain and SSL renewals, backups, updates and monthly SEO checks, handled for you.", "build",
+     "Hosting, updates, backups and SEO checks"),
 ]
+GROUPS = [("grow", "Get found and get enquiries"), ("build", "Build and automate")]
 
 CASES = [
     dict(id="gtec", img="work-gtec.jpg", url="https://gteccharummood.in", host="gteccharummood.in",
@@ -175,9 +196,14 @@ def header(cur):
     def a(href, label):
         c = ' aria-current="page"' if href == cur else ""
         return f'<a href="{href}"{c}>{label}</a>'
-    dd = "".join(f'<a href="{s[0]}"><b>{html.escape(s[1])}</b><span>{html.escape(s[3].split(",")[0].split(".")[0])}</span></a>' for s in SERVICES)
-    dd += '<a href="batchboard.html"><b>BatchBoard</b><span>Lobby TV attendance app for training centres</span></a>'
-    svc_cur = ' aria-current="page"' if cur in [s[0] for s in SERVICES] else ""
+    def item(href, name, blurb): return f'<a href="{href}"><b>{html.escape(name)}</b><span>{html.escape(blurb)}</span></a>'
+    cols = []
+    for g, label in GROUPS:
+        links = "".join(item(s[0], s[1], s[5]) for s in SERVICES if s[4] == g)
+        if g == "build": links += item("batchboard.html", "BatchBoard", "Lobby TV attendance app for training centres")
+        cols.append(f'<div><p class="dd-h">{label}</p>{links}</div>')
+    dd = f'<div class="dd-cols">{"".join(cols)}</div><a class="dd-all" href="services.html">All services {ARROW}</a>'
+    svc_cur = ' aria-current="page"' if cur in [s[0] for s in SERVICES] + ["services.html"] else ""
     return f'''<header class="hd"><div class="wrap">
 <a class="brand" href="index.html" aria-label="Ad Pro Advertising, home"><img src="logo.svg" width="168" height="80" alt="Ad Pro Digital Marketing"></a>
 <button class="menu" aria-expanded="false" aria-controls="nav" aria-label="Open menu">{MENU_ICON}</button>
@@ -190,7 +216,7 @@ def header(cur):
 <main id="main">
 '''
 
-def cta(h="Tell us what you sell and who buys it.", p="We'll tell you what would bring you more enquiries: a website, ads, creatives or an app. No obligation."):
+def cta(h="Tell us what you sell and who buys it.", p="We'll tell you what would bring you more enquiries or save your team time: a website, ads, creatives, automation or an app. No obligation."):
     return f'''<section class="cta">{hands_svg("cs")}<div class="wrap">
 <div><h2 class="d2">{h}</h2><p data-lit>{p}</p></div>
 <div class="acts"><a class="call" href="tel:{TEL}"><small>Call or WhatsApp</small><span class="num">{PHONE}</span></a>
@@ -204,7 +230,7 @@ def footer():
 <footer class="ft"><div class="wrap">
 <div class="cols">
 <div><a href="index.html" aria-label="Ad Pro Advertising, home"><img src="logo-reverse.svg" width="180" height="85" alt="Ad Pro Digital Marketing"></a>
-<p>Websites, local SEO, ads, posters, video and apps for businesses across Kerala and beyond.</p>
+<p>Websites, local SEO, ads, posters, video, automation and apps for businesses across Kerala and beyond.</p>
 <p>{ADDRESS}</p>
 <p>{HOURS_TEXT}</p></div>
 <div><h3>Services</h3><ul>{svc}</ul></div>
@@ -320,7 +346,7 @@ def inner(path, name, h1, lede, sections, faqs, wa_msg, side_title="Talk to us a
 def ul(items): return "<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>"
 
 # ---------------- HOME ----------------
-_mq_items = ["Websites", "Local SEO", "Meta ads", "Google ads", "Posters", "Malayalam reels", "Apps", "BatchBoard"]
+_mq_items = ["Websites", "Local SEO", "Meta ads", "Google ads", "Posters", "Malayalam reels", "Online stores", "WhatsApp automation", "AI assistants", "Apps", "BatchBoard"]
 _mq = "".join(f"<span>{x}</span>" for x in _mq_items)
 MARQUEE = f'<div class="mq" aria-hidden="true"><div class="mq-t">{_mq}{_mq}</div></div>'
 _stats = [(65, "+", "pages hand-coded for clients, across three live sites"),
@@ -328,14 +354,20 @@ _stats = [(65, "+", "pages hand-coded for clients, across three live sites"),
           (4, "", "platforms we build apps for: Android, iPhone, web and Windows"),
           (2, "", "languages in every creative: Malayalam and English")]
 STATS = "".join(f'<div data-r><b><span data-count="{n}">{n}</span><em>{suf}</em></b><p>{t}</p></div>' for n, suf, t in _stats)
-svc_rows = "".join(f'<a data-r href="{s[0]}"><span class="d3">{html.escape(s[1])}</span><p>{html.escape(s[3])}</p><span class="go">{ARROW}</span></a>' for s in SERVICES)
-svc_rows += f'<a data-r href="batchboard.html"><span class="d3">BatchBoard<span class="tagp">Product</span></span><p>Live batch attendance on your lobby TV, with your ads in between. &#8377;5,000 one-time.</p><span class="go">{ARROW}</span></a>'
+def svc_row(s): return f'<a data-r href="{s[0]}"><span class="d3">{html.escape(s[1])}</span><p>{html.escape(s[3])}</p><span class="go">{ARROW}</span></a>'
+BB_ROW = f'<a data-r href="batchboard.html"><span class="d3">BatchBoard<span class="tagp">Product</span></span><p>Live batch attendance on your lobby TV, with your ads in between. &#8377;5,000 one-time.</p><span class="go">{ARROW}</span></a>'
+def svc_groups(tag="h3"):
+    out = ""
+    for g, label in GROUPS:
+        rows = "".join(svc_row(s) for s in SERVICES if s[4] == g) + (BB_ROW if g == "build" else "")
+        out += f'<{tag} class="svc-g">{label}</{tag}><nav class="svc" aria-label="{label}">{rows}</nav>'
+    return out
 proof = "".join(f'<a href="#{c["id"]}"><b>{html.escape(c["client"].split(",")[0].replace(" and Rehabilitation Centre",""))}</b><span>{html.escape(c["host"] if "." in c["host"] else "Live preview site")}</span></a>' for c in CASES)
 HOME_GUIDES = "".join(post_card(p) for p in POSTS[:3])
 home = f'''<section class="hero"><div class="wrap hero-grid">
 <div><p class="where"><i></i>Digital marketing studio in Charummood, Alappuzha</p>
 <h1 class="d1">Websites, ads and apps that bring in enquiries.</h1>
-<p class="lede">We build fast websites that rank locally, run Facebook, Instagram and Google ads measured on real leads, design posters and Malayalam reels, and develop apps. All in-house, all for one result: more of the right people calling you.</p>
+<p class="lede">We build fast websites and online stores that rank locally, run Facebook, Instagram and Google ads measured on real leads, and design posters and Malayalam reels. Then we automate the work behind them with WhatsApp automation, AI assistants, apps and business software. It's all done in-house, for one result: more of the right people calling you.</p>
 <div class="ctas"><a class="btn btn-ink mag" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} Chat on WhatsApp</a><a class="btn btn-line" href="work.html">See our work</a></div></div>
 <div class="hands">{hands_svg()}</div>
 </div>
@@ -344,8 +376,8 @@ home = f'''<section class="hero"><div class="wrap hero-grid">
 {MARQUEE}
 
 <section class="sec"><div class="wrap">
-<div class="sec-h"><h2 class="d2">One team for the whole job.</h2><p>The website, the ads that send people to it, the creatives inside those ads, and the app behind them. One team answers for the result.</p></div>
-<nav class="svc" aria-label="Services">{svc_rows}</nav>
+<div class="sec-h"><h2 class="d2">One team for the whole job.</h2><p>The website, the ads that send people to it, the creatives inside those ads, and the automation and software behind them. One team answers for the result.</p></div>
+{svc_groups()}
 </div></section>
 
 <section class="sec ink"><div class="wrap">
@@ -442,7 +474,7 @@ inner("app-development.html", "App Development", "Your app. On every screen.",
       "Android, iPhone, web and Windows apps, designed, built and launched by Ad Pro. Tell us your idea and we take care of the rest.",
       [("What we build", ul(["<b>Android and iPhone apps</b> for phones and tablets", "<b>Android TV apps</b> for lobby and shop displays", "<b>Windows desktop apps</b> for billing, stock and front-office work",
             "<b>Web apps and dashboards</b> that run in the browser, with nothing to install",
-            "<b>WhatsApp Business automation</b>: Cloud API auto-replies that answer common questions from your own data and step aside when your staff reply by hand",
+            '<b>WhatsApp Business automation</b>: auto-replies that answer common questions from your own data and step aside when your staff reply by hand (see <a href="whatsapp-business-automation.html">WhatsApp Automation</a>)',
             "<b>Integrations</b> with what you already use: Google Sheets, email, attendance and biometric devices, ad platforms"])),
        ("Built from your real workflow", "<p>We start with how your staff work today: who enters what, where the data lives and what keeps going wrong. Then we build only what removes that work. A good business app is usually small, and it fits the way people already do things.</p>"),
        ("Complete delivery", "<p>Design, development, testing on your devices, installation and staff hand-over. Source code is kept in a private repository, and app builds are produced automatically from it.</p>"),
@@ -469,6 +501,121 @@ inner("batchboard.html", "BatchBoard", "Attendance, live on your centre TV.",
       "Hello Ad Pro, I'd like a BatchBoard demo for my centre.", side_title="Book a demo", side_text="See BatchBoard running, then decide.",
       price="&#8377;5,000 one-time, no subscription", title="BatchBoard: Lobby TV Attendance App | Ad Pro Advertising",
       desc="BatchBoard shows live batch attendance on your training centre's lobby TV and plays your ads between batches. \u20b95,000 one-time, no subscription.")
+
+inner("ecommerce-website-development.html", "E-commerce Websites", "Sell online. Get paid by UPI.",
+      "Online stores that take UPI, card and cash-on-delivery payments, load fast on mobile data and show up on Google.",
+      [("What your store includes", ul(["<b>Product catalogue</b> with categories, search, photos, sizes and variants",
+            "<b>Cart and checkout</b> that works well on a phone, which is where most of your customers will order",
+            "<b>Online payments</b> through a payment gateway such as Razorpay, PhonePe or Cashfree: UPI, cards, net banking and wallets, plus cash on delivery if you offer it",
+            "<b>GST-inclusive prices</b> and invoices with your GST details",
+            "<b>Delivery charges</b> set by pincode, district or order value",
+            "<b>Order alerts</b> to your staff, and order confirmations to the customer by email and WhatsApp",
+            "<b>An orders and stock page</b> for your team, where you can add products, change prices and mark items out of stock"])),
+       ("Built to be found, not just to look good", "<p>A store nobody finds doesn't sell. Every store gets the same SEO work as our websites: a page for each category written for what people actually search, Product structured data so Google can show price and stock, a sitemap, and a product feed for Google Merchant Center so your products can appear in Google's free shopping listings.</p>"),
+       ("Start simple with WhatsApp ordering", "<p>Not ready for online payments? We can build the catalogue first, with an order button that writes the customer's cart into a WhatsApp message to you. You confirm the order and payment the way you do now, and add a payment gateway later without rebuilding the store.</p>"),
+       ("Your store, in your name", "<p>The domain, the payment gateway account and the store itself stay in your name. There is no store-builder subscription. You pay for hosting and the payment gateway's own transaction fee, which we explain before you sign up.</p>"),
+       ("Product sites we have built", '<p>For S&amp;G Polymers, a PET bottle manufacturer in Alappuzha, we built product pages with Product structured data and a quote form that writes the order details into WhatsApp. See it in <a href="work.html#sg">our work</a>. We build stores for businesses across Kerala that sell across the state or all over India.</p>')],
+      [("Which payment methods can my customers use?", "Whatever your payment gateway supports, usually UPI, debit and credit cards, net banking and wallets. Cash on delivery can be added as a separate option."),
+       ("Can I add products and change prices myself?", "Yes. The store comes with a page where your team adds products, changes prices and marks items out of stock, without touching code."),
+       ("Do I need a payment gateway account?", "Yes, for online payments. The gateway account is opened in your business's name, and money from sales goes straight to your bank account. We help with the set-up and connect it to the store."),
+       ("Can you add online ordering to my existing website?", "Usually, yes. We look at your current site first and tell you whether to add a store section or build the store separately.")],
+      "Hello Ad Pro, I'm interested in an e-commerce website.",
+      title="E-commerce Website Development, Kerala | Ad Pro Advertising",
+      desc="Online stores with UPI, card and cash-on-delivery payments, product SEO and WhatsApp order alerts, built by Ad Pro Advertising for businesses across Kerala.")
+
+inner("whatsapp-business-automation.html", "WhatsApp Automation", "Answer every WhatsApp message, even at night.",
+      "Automatic WhatsApp replies on the official WhatsApp Business Platform. They quote your real prices and details, and step aside when your staff reply.",
+      [("What it does", ul(["<b>Replies straight away</b> to common questions: prices, fees, timings, location and what to bring",
+            "<b>Menus and buttons</b> so customers can pick a product, course or service instead of typing",
+            "<b>Collects the details you need</b>, such as name, place and what they want, and saves them to a Google Sheet or your own system",
+            "<b>Sends brochures, price lists and your location</b> when asked",
+            "<b>Alerts your staff</b> when someone is ready to buy or book, so a person can call them",
+            "<b>Goes quiet when your staff reply by hand</b>, so customers never get a robot answer in the middle of a real conversation"])),
+       ("Built on the official platform", "<p>We build on Meta's WhatsApp Business Platform (the Cloud API), not on unofficial bulk-sending tools that can get your number blocked. Messages you send first, such as reminders and follow-ups, use templates approved by Meta, and they go only to people who have contacted you or agreed to hear from you.</p><p>Meta charges for some types of message under its own pricing. We explain what that means for you before anything is switched on.</p>"),
+       ("Reminders and follow-ups", ul(["Appointment, class and payment reminders", "Order and delivery updates", "A follow-up to enquiries that went quiet, sent once and politely",
+            "Offer messages to customers who opted in"])),
+       ("A real example", '<p>For G-TEC Computer Education in Charummood we built a WhatsApp auto-reply engine. It quotes exactly the same course fees as the centre\'s website and goes quiet as soon as a staff member replies by hand. See the full project in <a href="work.html#gtec">our work</a>.</p>'),
+       ("Works with your ads", '<p>Most local ads in Kerala send people to WhatsApp. With automation in place, every ad enquiry gets an instant answer, even outside office hours, and the conversation is recorded against the ad it came from. Read how we <a href="blog/whatsapp-ads-real-enquiries.html">track which WhatsApp ads bring real enquiries</a>, or see our <a href="meta-google-ads.html">ads service</a>.</p>')],
+      [("Will my WhatsApp number get banned?", "Bans usually come from unofficial bulk-messaging tools. We build on Meta's official platform and follow its rules on who you can message and when."),
+       ("Can my staff still reply to customers themselves?", "Yes. Staff can take over any conversation, and the automation steps aside as soon as they do."),
+       ("Can I use my existing business number?", "Usually, yes. We check how your number is set up now and explain the options before changing anything."),
+       ("Can it send bulk messages to a list I bought?", "No. WhatsApp only allows business messages to people who contacted you or agreed to hear from you, and breaking that rule puts your number at risk.")],
+      "Hello Ad Pro, I'm interested in WhatsApp automation.",
+      title="WhatsApp Business Automation in Kerala | Ad Pro Advertising",
+      desc="WhatsApp auto-replies, menus, lead capture and reminders on the official WhatsApp Business Platform, built by Ad Pro Advertising for businesses across Kerala.")
+
+inner("ai-chatbot-development.html", "AI Chat Assistants", "An assistant that knows your business.",
+      "AI chat assistants for your website and WhatsApp. They answer questions from your own prices, courses or products, in English or Malayalam, and pass real leads to your staff.",
+      [("What it can answer", "<p>Customers ask the same questions all day: what does it cost, how long does it take, do you deliver to my area, are you open on Saturday. An AI assistant answers those straight away, in a natural conversation, at any hour.</p>"),
+       ("It answers from your information, not guesses", "<p>We give the assistant only the information you approve: your price list, course details, product sheets, policies and FAQs. It is set up to answer from that, to say so when it doesn't know, and to hand the customer to your staff. When your prices change, we update its information the same way we update your website.</p>"),
+       ("Hands real leads to a person", "<p>When a customer is ready to buy, book or visit, the assistant collects their name and number and alerts your team, or opens WhatsApp with the details already written. The assistant handles the routine questions, and your staff close the sale.</p>"),
+       ("Where it can run", ul(["<b>On your website</b>, as a chat window on every page", '<b>On WhatsApp</b>, together with <a href="whatsapp-business-automation.html">WhatsApp automation</a>',
+            "<b>For your staff</b>, as an internal assistant that answers from your own manuals, policies and procedures"])),
+       ("English and Malayalam", "<p>Customers in Kerala switch between English, Malayalam and Manglish in the same chat. The assistant can follow along and reply in the language the customer uses.</p>"),
+       ("A real example", '<p>The website we built for G-TEC Computer Education includes an enquiry assistant that answers course and fee questions on the page itself. See the project in <a href="work.html#gtec">our work</a>.</p>')],
+      [("Will it make mistakes?", "It can, like any AI. That is why it answers only from information you approve, says when it doesn't know, and hands over to your staff. We test it with real customer questions before it goes live."),
+       ("What does it cost to run?", "AI services charge by how much they are used. Before launch we estimate the monthly running cost from the number of chats you expect, so there are no surprises."),
+       ("What happens to customer conversations?", "We tell you which AI service the assistant uses, what is sent to it and where conversations are stored, and we keep that to what is needed to answer."),
+       ("Can it book appointments or take orders?", "Yes, if we connect it to your booking or order system. It can also just collect the details and pass them to your staff.")],
+      "Hello Ad Pro, I'm interested in an AI chat assistant.",
+      title="AI Chatbot Development in Kerala | Ad Pro Advertising",
+      desc="AI chat assistants for your website and WhatsApp that answer from your own prices and details in English or Malayalam, built by Ad Pro Advertising, Kerala.")
+
+inner("custom-software-development.html", "Custom Software & Dashboards", "Software that fits how you already work.",
+      "Enquiry trackers, billing, booking, stock and staff tools, and dashboards that show your numbers at a glance, built for your business instead of bought off the shelf.",
+      [("What we build", ul(["<b>Enquiry and lead trackers</b>: every enquiry from ads, WhatsApp, calls and walk-ins in one place, with follow-up dates and who is handling it",
+            "<b>Billing and GST invoices</b>, with payment and due-amount tracking",
+            "<b>Booking and appointments</b>, with reminders to customers and a day view for staff",
+            "<b>Stock and orders</b> for shops, distributors and manufacturers",
+            "<b>Staff tools</b>: attendance, daily tasks, targets and incentive tracking",
+            "<b>Dashboards</b> that show sales, collections, enquiries and ad spend on one screen, on your phone or computer"])),
+       ("Start from the spreadsheets you already have", "<p>Most businesses already run on Excel or Google Sheets. Often the fastest win is to keep those sheets and automate around them: daily summaries, follow-up reminders, reports that build themselves and data entered once instead of three times. When a sheet is no longer enough, we move the data into a proper app without losing anything.</p>"),
+       ("Connected to what you already use", "<p>Your website forms, WhatsApp, Google Sheets, email and ad accounts can feed into one system, so enquiries and sales are recorded automatically instead of copied by hand.</p>"),
+       ("Built with us, owned by you", "<p>We start by watching how your staff work today and agree the screens with you before building. You review everything on a preview link, we test it on your devices and show your team how to use it. The software and its data belong to you.</p>"),
+       ("Examples from our work", '<p>For G-TEC Computer Education we built an enquiry form that records which ad each lead came from, and a lobby TV attendance system that became our product <a href="batchboard.html">BatchBoard</a>. Need a phone or desktop app instead? See <a href="app-development.html">App Development</a>.</p>')],
+      [("Why custom software instead of an off-the-shelf app?", "Off-the-shelf software makes you change how you work, and you keep paying for features you never use. Custom software does only what your business needs, the way your staff already do it."),
+       ("Does it work on mobile?", "Yes. We build it to run in the browser on phones, tablets and computers, and as an installed app where that makes more sense."),
+       ("Can you import our existing Excel data?", "Yes. We bring in your existing customer, product or sales data, so you start with your full history."),
+       ("Who looks after it once it is built?", "We do, if you want us to. We fix problems and make changes as your business grows, and we agree how that works before the build starts.")],
+      "Hello Ad Pro, I'm interested in custom software for my business.",
+      title="Custom Software & Dashboards in Kerala | Ad Pro Advertising",
+      desc="Enquiry trackers, billing, booking, stock and staff tools, and business dashboards, custom-built by Ad Pro Advertising for businesses across Kerala.")
+
+inner("website-maintenance-hosting.html", "Website Maintenance & Hosting", "Your website, kept fast, safe and up to date.",
+      "Hosting, domain and SSL renewals, backups, content updates and monthly SEO checks, handled for you. We look after sites we built and sites someone else built.",
+      [("What we take care of", ul(["<b>Hosting</b> set up and managed, with free SSL so your site shows the padlock",
+            "<b>Domain and SSL renewals</b> tracked, so your site never goes down because a renewal was missed",
+            "<b>Backups</b> of your site, so it can be restored if anything goes wrong",
+            "<b>Content updates</b>: new prices, offers, photos, staff, courses or whole new pages",
+            "<b>Speed and broken-link checks</b>, so pages keep loading fast on mobile data",
+            "<b>Google Search Console checks</b> for pages Google can't index, and the searches people find you with",
+            "<b>Google Business Profile updates</b>: hours, photos and posts kept in line with your website",
+            "<b>Business email</b> on your own domain, set up and connected"])),
+       ("A short report every month", "<p>Each month we tell you in a few lines what we checked, what we changed, how many people found you on Google and anything that needs your decision. No jargon and no padding.</p>"),
+       ("Taking over a site someone else built", '<p>Your old developer has disappeared? We take over WordPress, Wix and page-builder sites as well as hand-coded ones. We check the site, secure the logins and domain in your name, fix what is broken, and tell you plainly whether it is worth keeping. If a rebuild makes more sense, we do it without losing your Google rankings. Read <a href="blog/rebuild-website-without-losing-google-rankings.html">how we rebuild a website without losing rankings</a>.</p>'),
+       ("Your accounts stay yours", "<p>The domain, hosting and Google accounts are kept in your business's name, with us added as a partner. If you ever move on, everything stays with you.</p>")],
+      [("Can you look after a website you didn't build?", "Yes. We start with a check of the site, its hosting and its domain, then tell you what needs fixing before we take it on."),
+       ("Who owns my domain?", "You do. We make sure the domain is registered in your business's name, and if it isn't, we help you move it."),
+       ("How quickly are changes made?", "We agree turnaround times with you when we start. Urgent fixes, such as a site that is down, come first."),
+       ("Do you offer hosting on its own?", "Yes. We can set up and manage hosting and email for a site you or someone else built.")],
+      "Hello Ad Pro, I'm interested in website maintenance and hosting.",
+      title="Website Maintenance & Hosting in Kerala | Ad Pro Advertising",
+      desc="Website hosting, domain and SSL renewals, backups, content updates and monthly SEO checks for businesses across Kerala, from Ad Pro Advertising.")
+
+# ---------------- SERVICES OVERVIEW ----------------
+services_body = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / Services</div>
+<h1 class="d1">Everything a local business needs online.</h1><p class="lede">Websites, ads and creatives that bring people to you, plus the automation, apps and software that handle the work behind them. All of it is done by one team in Charummood, Alappuzha, for businesses across Kerala and beyond.</p></div></section>
+<section class="sec"><div class="wrap">{svc_groups("h2")}</div></section>
+<section class="sec mist"><div class="wrap">
+<div class="sec-h"><h2 class="d2">How a project runs</h2><p>Whatever we build, it runs the same way, and nothing goes live without your approval.</p></div>
+<ol class="steps">{"".join(f"<li data-r><h3>{a}</h3><p>{b}</p></li>" for a, b in STEPS)}</ol>
+</div></section>
+{cta("Not sure which service you need?", "Tell us what you sell and what is taking your team's time. We'll tell you what would help most, even if it's only one thing.")}'''
+_svc_list = {"@type": "ItemList", "name": "Ad Pro Advertising services", "itemListElement": [
+    {"@type": "ListItem", "position": i + 1, "name": s[1], "url": page_url(s[0])} for i, s in enumerate(SERVICES + [("batchboard.html", "BatchBoard")])]}
+page("services.html", "Digital Marketing & Software Services | Ad Pro Advertising",
+     "Websites, local SEO, Meta and Google ads, posters, online stores, WhatsApp automation, AI assistants, custom software and apps, from Ad Pro Advertising, Kerala.",
+     services_body, [_svc_list] + crumbs_ld("Services", "services.html"))
 
 # ---------------- WORK ----------------
 work = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / Our work</div>
@@ -573,7 +720,7 @@ shutil.copy("site.css", f"{OUT}/site.css")
 shutil.copy("site.js", f"{OUT}/site.js")
 shutil.copy("../lenis.min.js", f"{OUT}/lenis.min.js")
 shutil.copytree("blog-img", f"{OUT}/blog/img", dirs_exist_ok=True)
-pages = ["index.html"] + [s[0] for s in SERVICES] + ["batchboard.html", "work.html", "about.html", "contact.html", BLOG] + [post_url(p) for p in POSTS]
+pages = ["index.html", "services.html"] + [s[0] for s in SERVICES] + ["batchboard.html", "work.html", "about.html", "contact.html", BLOG] + [post_url(p) for p in POSTS]
 sm = "".join(f"<url><loc>{page_url(p)}</loc><lastmod>{LASTMOD}</lastmod></url>" for p in pages)
 open(f"{OUT}/sitemap.xml", "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n')
 open(f"{OUT}/robots.txt", "w").write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")

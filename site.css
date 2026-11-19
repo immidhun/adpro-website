@@ -61,6 +61,14 @@ h1,h2,h3{margin:0}
 .dd-panel a b{display:block;font-weight:700}
 .dd-panel a span{font-size:.88rem;color:var(--steel)}
 .dd-panel a:hover{background:var(--mist)}
+.dd-panel{width:min(660px,calc(100vw - 40px))}
+.dd-cols a{padding:8px 14px}.dd-cols a span{display:block;line-height:1.35;margin-top:2px}
+.dd-cols{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}
+.dd-h{margin:6px 14px 4px;font:700 .74rem/1.2 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.dd-panel a.dd-all{display:flex;align-items:center;gap:8px;margin-top:6px;border-top:1px solid var(--line);font-weight:700;color:var(--deep)}
+.dd-all svg{width:16px;height:16px}
+.svc-g{font:700 .8rem/1.2 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 14px}
+.svc+.svc-g{margin-top:56px}
 .hd .btn{margin-left:8px}
 .menu{display:none;margin-left:auto;background:none;border:0;padding:10px;cursor:pointer}
 .menu svg{width:28px;height:28px}
@@ -230,7 +238,9 @@ ol.steps{margin:0;padding:0}
   .nav{display:none;position:absolute;top:76px;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;padding:8px var(--gut) 20px;border-bottom:1px solid var(--line);gap:0}
   .nav.open{display:flex}
   .nav>a,.nav .dd>button{padding:16px 0;border-bottom:1px solid var(--line);width:100%;justify-content:space-between}
-  .dd-panel{position:static;display:none;border:0;box-shadow:none;padding:0 0 8px;min-width:0}
+  .dd-panel{position:static;display:none;border:0;box-shadow:none;padding:0 0 8px;min-width:0;width:auto}
+  .dd-cols{grid-template-columns:1fr}
+  .nav.open{max-height:calc(100vh - 76px);overflow-y:auto}
   .dd.open .dd-panel{display:block}
   .dd:hover .dd-panel{display:none}.dd.open:hover .dd-panel{display:block}
   .menu{display:block}
