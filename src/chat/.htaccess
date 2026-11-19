@@ -1,0 +1,9 @@
+Options -Indexes
+# Only api.php is meant to be opened from the web.
+<FilesMatch "^(knowledge\.txt|config\.php|config\.sample\.php)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^data/ - [F,L]
+</IfModule>

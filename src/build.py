@@ -14,7 +14,7 @@ TEL = "+917560921593"
 OUT = "dist"
 YEAR = 2026
 LASTMOD = "2026-11-19"   # update when pages change; used in the sitemap
-ASSET_V = "10"            # bump when site.css or site.js changes
+ASSET_V = "11"          # bump when site.css or site.js changes
 
 # Fill these in once confirmed. They must match the Google Business Profile exactly.
 # Empty values are left out of the structured data, so nothing is guessed.
@@ -203,6 +203,7 @@ def head(title, desc, path, extra_ld=None, og_type="website", image=None, noinde
 <link rel="stylesheet" href="site.css?v={ASSET_V}">
 <script src="lenis.min.js" defer></script>
 <script src="site.js?v={ASSET_V}" defer></script>
+<script src="chat.js?v={ASSET_V}" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -343,8 +344,23 @@ def service_ld(path, name, desc):
              "provider": {"@id": SITE + "/#org"},
              "areaServed": [{"@type": "State", "name": "Kerala"}, {"@type": "Country", "name": "India"}]}]
 
+# Page facts collected for the website chat assistant (written to chat/knowledge.txt at the end).
+KB = []
+def plain(s):
+    s = re.sub(r"</(p|li|h\d)>", "\n", s)
+    s = re.sub(r"<li>", "- ", s)
+    return re.sub(r"\n\s*\n+", "\n", html.unescape(re.sub(r"<[^>]+>", "", s))).strip()
+
+def kb_page(path, name, h1, lede, sections, faqs, price=None):
+    t = [f"## {name}", f"Page: {page_url(path)}", plain(h1), plain(lede)]
+    if price: t.append("Published price: " + plain(price))
+    t += [f"{plain(h)}:\n{plain(b)}" for h, b in sections]
+    t += ["Questions:"] + [f"Q: {q}\nA: {a}" for q, a in faqs]
+    KB.append("\n".join(t))
+
 def inner(path, name, h1, lede, sections, faqs, wa_msg, side_title="Talk to us about this",
           side_text="Tell us about your business on WhatsApp. We reply with what we would do and a quote.", price=None, title=None, desc=None):
+    kb_page(path, name, h1, lede, sections, faqs, price)
     others = "".join(f'<li><a href="{s[0]}">{html.escape(s[1])}</a></li>' for s in SERVICES if s[0] != path)
     if path != "batchboard.html": others += '<li><a href="batchboard.html">BatchBoard</a></li>'
     secs = "".join(f"<section><h2>{h}</h2>{b}</section>" for h, b in sections)
@@ -673,7 +689,9 @@ inner("online-booking-system.html", "Online Booking Systems", "Take bookings dir
 SVC_NAME = {s[0]: s[1] for s in SERVICES} | {"batchboard.html": "BatchBoard"}
 def industry(path, h1, lede, needs, svcs, proof, faqs, wa_msg, title, desc):
     name = next(i[1] for i in INDUSTRIES if i[0] == path)
-    others = "".join(f'<li><a href="{i[0]}">{html.escape(i[1])}</a></li>' for i in INDUSTRIES if i[0] != path)
+    kb_page(path, name, h1, lede, [(f"What {name.lower()} need online", ul(needs)),
+            ("What we build for you", ul([f"{SVC_NAME[p]}: {why}" for p, why in svcs])), proof], faqs)
+    others ="".join(f'<li><a href="{i[0]}">{html.escape(i[1])}</a></li>' for i in INDUSTRIES if i[0] != path)
     svc_li = ul([f'<a href="{p}"><b>{html.escape(SVC_NAME[p])}</b></a>: {why}' for p, why in svcs])
     fq = "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>" for q, a in faqs)
     secs = f"<section><h2>What {html.escape(name.lower())} need online</h2>{ul(needs)}</section><section><h2>What we build for you</h2>{svc_li}</section><section><h2>{proof[0]}</h2>{proof[1]}</section>"
@@ -949,6 +967,62 @@ for p in POSTS:
 # ---------------- static files ----------------
 shutil.copy("site.css", f"{OUT}/site.css")
 shutil.copy("site.js", f"{OUT}/site.js")
+shutil.copy("chat.js", f"{OUT}/chat.js")
+os.makedirs(f"{OUT}/chat", exist_ok=True)
+for f in ("api.php", ".htaccess", "config.sample.php"): shutil.copy(f"chat/{f}", f"{OUT}/chat/{f}")
+
+# ---------------- chat assistant knowledge ----------------
+# The assistant answers only from this file, so it always matches what the website says.
+CHAT_RULES = f"""You are the website assistant for Ad Pro Advertising, a digital marketing and software studio in Charummood, Alappuzha, Kerala. You chat with visitors on {SITE}. Help them work out what Ad Pro can do for their business, answer their questions from the facts below, and get them talking to the team on WhatsApp or by phone.
+
+How to reply:
+- Keep replies short, usually two to five sentences. Use a short "- " list only when listing several things. Write plain text: no headings, bold, tables or emoji.
+- Use plain, friendly English. If the visitor writes in Malayalam, reply in simple Malayalam. If they write Malayalam in English letters (Manglish), reply the same way.
+- Answer only from the facts below. When something is not covered, say the team will confirm it, and give the WhatsApp number. Do not guess.
+- Never quote a price, discount, timeline or result that is not written below. Most work is quoted after a short chat, because cost depends on what the business needs. The one published price is BatchBoard.
+- Never promise Google rankings, numbers of leads, sales or ad results.
+- Mention only the client projects listed below. Never invent clients, reviews, awards or numbers.
+- When you point to a page, write its full address on its own, for example {SITE}/services.html.
+- When the visitor wants a quote, wants to start, or asks for a call or meeting, suggest WhatsApp or a call on +91 {PHONE}, and suggest they mention their business and what they need.
+- Do not ask for phone numbers, email addresses or other personal details. The visitor can message on WhatsApp instead.
+- If asked, say you are an AI assistant and that the team reads WhatsApp messages during opening hours.
+- Stay on topic: Ad Pro, its services, and general questions about websites, ads, SEO, social media, automation and apps for businesses. Politely decline anything unrelated.
+- Call the business "Ad Pro Advertising" the first time, then "Ad Pro".
+"""
+_hours = "; ".join(f'{", ".join(h["days"])}: {h["opens"]} to {h["closes"]}' for h in BUSINESS["hours"]) + "; Sunday: closed"
+CHAT_FACTS = f"""# Ad Pro Advertising: facts
+
+Name: Ad Pro Advertising (short: Ad Pro). Instagram: @adpro_advt.
+Address: {ADDRESS}. This is the same building as G-TEC Computer Education, Charummood.
+Map: {BUSINESS["maps_url"]}
+Phone and WhatsApp: +91 {PHONE}. WhatsApp link: https://wa.me/{WA}
+Opening hours (India time): {_hours}.
+Area served: businesses across Kerala, and clients elsewhere in India (for example Bengaluru). Most work happens online, so the client does not need to visit.
+Languages: English and Malayalam, including Malayalam posters, reels and voice-overs.
+How we work: code, copywriting, poster design, motion video and app development are all done by Ad Pro's own team in Charummood. The client reviews everything on a preview link before it goes live. To start, the visitor messages on WhatsApp with what they sell and who buys it, and Ad Pro replies with what it would do and a quote.
+
+Main pages:
+- Home: {SITE}/
+- All services: {SITE}/services.html
+- Industries: {SITE}/industries.html
+- Our work (client projects): {SITE}/work.html
+- About: {SITE}/about.html
+- Blog: {SITE}/blog/
+- Contact: {SITE}/contact.html
+
+Services:
+""" + "\n".join(f"- {s[1]}: {s[3]} {page_url(s[0])}" for s in SERVICES) + f"""
+- BatchBoard: lobby TV attendance app for training centres. {page_url("batchboard.html")}
+
+Industries with their own page:
+""" + "\n".join(f"- {i[1]}: {i[2]} {page_url(i[0])}" for i in INDUSTRIES) + """
+
+Client projects (the only ones to mention):
+""" + "\n".join(f'- {c["client"]} ({c["kind"]}): {plain(c["title"])} ' + " ".join(plain(x) for x in c["full"]) for c in CASES) + """
+
+Blog guides:
+""" + "\n".join(f"- {p['title']}: {SITE}/{post_url(p)}" for p in POSTS)
+open(f"{OUT}/chat/knowledge.txt", "w").write(CHAT_RULES + "\n" + CHAT_FACTS + "\n\n# Service and industry pages\n\n" + "\n\n".join(KB) + "\n")
 shutil.copy("../lenis.min.js", f"{OUT}/lenis.min.js")
 shutil.copytree("blog-img", f"{OUT}/blog/img", dirs_exist_ok=True)
 pages = ["index.html", "services.html"] + [s[0] for s in SERVICES] + ["industries.html"] + [i[0] for i in INDUSTRIES] + ["batchboard.html", "work.html", "about.html", "contact.html", BLOG] + [post_url(p) for p in POSTS]

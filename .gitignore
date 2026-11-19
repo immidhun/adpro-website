@@ -2,3 +2,4 @@ src/dist/
 src/__pycache__/
 src/_cover.html
 deploy/
+src/chat/config.php
