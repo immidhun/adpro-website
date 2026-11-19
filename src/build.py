@@ -14,7 +14,7 @@ TEL = "+917560921593"
 OUT = "dist"
 YEAR = 2026
 LASTMOD = "2026-11-19"   # update when pages change; used in the sitemap
-ASSET_V = "9"            # bump when site.css or site.js changes
+ASSET_V = "10"            # bump when site.css or site.js changes
 
 # Fill these in once confirmed. They must match the Google Business Profile exactly.
 # Empty values are left out of the structured data, so nothing is guessed.
@@ -56,9 +56,15 @@ SERVICES = [
     ("posters-video-ads.html", "Posters & Video Ads", "Posters & video",
      "Posters, social creatives and short reels in Malayalam and English, sized for every placement.", "grow",
      "Creatives and reels in Malayalam and English"),
+    ("social-media-management.html", "Social Media Management", "Social media",
+     "A monthly plan of posters, reels and posts for Instagram, Facebook and Google, made and posted for you.", "grow",
+     "Monthly posts and reels, made and posted for you"),
     ("ecommerce-website-development.html", "E-commerce Websites", "Online stores",
      "Online stores that take UPI, card and cash-on-delivery payments, built to load fast and show up on Google.", "build",
      "Online stores with UPI and card payments"),
+    ("online-booking-system.html", "Online Booking Systems", "Bookings",
+     "Direct booking for homestays, houseboats, clinics and salons, with UPI deposits and WhatsApp reminders.", "build",
+     "Direct bookings with deposits and reminders"),
     ("whatsapp-business-automation.html", "WhatsApp Automation", "WhatsApp automation",
      "Instant WhatsApp replies from your real prices and details, on the official platform, handing over to staff when it matters.", "build",
      "Instant replies on the official WhatsApp platform"),
@@ -76,6 +82,17 @@ SERVICES = [
      "Hosting, updates, backups and SEO checks"),
 ]
 GROUPS = [("grow", "Get found and get enquiries"), ("build", "Build and automate")]
+
+# (path, name, one-line summary)
+INDUSTRIES = [
+    ("digital-marketing-for-training-centres.html", "Training & Coaching Centres", "Fill every batch: course pages, ads that bring admissions, WhatsApp replies and attendance on your lobby TV."),
+    ("digital-marketing-for-clinics.html", "Clinics & Home Care", "Get found by patients nearby, collect reviews and take appointments on WhatsApp."),
+    ("digital-marketing-for-homestays-houseboats.html", "Homestays, Houseboats & Resorts", "More direct bookings and less commission, with a booking site guests can trust."),
+    ("digital-marketing-for-manufacturers.html", "Manufacturers & Traders", "Product pages and district pages that bring bulk enquiries from across Kerala."),
+    ("digital-marketing-for-food-businesses.html", "Restaurants, Bakers & Food Businesses", "Menus that rank on Google, orders on WhatsApp and reels that make people hungry."),
+    ("digital-marketing-for-study-abroad-consultants.html", "Study Abroad Consultants", "Honest course and country pages, enquiry tracking and fast WhatsApp follow-up."),
+    ("digital-marketing-for-real-estate.html", "Real Estate & Builders", "Project sites and ads that reach Gulf NRI buyers, with RERA details on every page."),
+]
 
 CASES = [
     dict(id="gtec", img="work-gtec.jpg", url="https://gteccharummood.in", host="gteccharummood.in",
@@ -203,13 +220,15 @@ def header(cur):
         if g == "build": links += item("batchboard.html", "BatchBoard", "Lobby TV attendance app for training centres")
         cols.append(f'<div><p class="dd-h">{label}</p>{links}</div>')
     dd = f'<div class="dd-cols">{"".join(cols)}</div><a class="dd-all" href="services.html">All services {ARROW}</a>'
-    svc_cur = ' aria-current="page"' if cur in [s[0] for s in SERVICES] + ["services.html"] else ""
+    svc_cur = ' aria-current="page"' if cur in [s[0] for s in SERVICES] + ["services.html", "batchboard.html"] else ""
+    ind_cur = ' aria-current="page"' if cur in [i[0] for i in INDUSTRIES] + ["industries.html"] else ""
+    ind_link = f'<a href="industries.html"{ind_cur}>Industries</a>'
     return f'''<header class="hd"><div class="wrap">
 <a class="brand" href="index.html" aria-label="Ad Pro Advertising, home"><img src="logo.svg" width="168" height="80" alt="Ad Pro Digital Marketing"></a>
 <button class="menu" aria-expanded="false" aria-controls="nav" aria-label="Open menu">{MENU_ICON}</button>
 <nav class="nav" id="nav" aria-label="Main">
 <div class="dd"><button type="button" aria-expanded="false"{svc_cur}>Services {CHEV}</button><div class="dd-panel">{dd}</div></div>
-{a("work.html","Our work")}{a("batchboard.html","BatchBoard")}{a("about.html","About")}{a("blog/index.html","Blog")}{a("contact.html","Contact")}
+{ind_link}{a("work.html","Our work")}{a("about.html","About")}{a("blog/index.html","Blog")}{a("contact.html","Contact")}
 </nav>
 <a class="btn btn-ink" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} WhatsApp us</a>
 </div></header>
@@ -234,6 +253,7 @@ def footer():
 <p>{ADDRESS}</p>
 <p>{HOURS_TEXT}</p></div>
 <div><h3>Services</h3><ul>{svc}</ul></div>
+<div><h3>Industries</h3><ul>{"".join(f'<li><a href="{i[0]}">{html.escape(i[1])}</a></li>' for i in INDUSTRIES)}</ul></div>
 <div><h3>Contact</h3><ul>
 <li>Call or WhatsApp<br><a class="num" href="tel:{TEL}" style="color:#fff;font-size:1.3rem">{PHONE}</a></li>
 <li><a href="{wa()}" target="_blank" rel="noopener">WhatsApp us</a></li>
@@ -378,6 +398,12 @@ home = f'''<section class="hero"><div class="wrap hero-grid">
 <section class="sec"><div class="wrap">
 <div class="sec-h"><h2 class="d2">One team for the whole job.</h2><p>The website, the ads that send people to it, the creatives inside those ads, and the automation and software behind them. One team answers for the result.</p></div>
 {svc_groups()}
+</div></section>
+
+<section class="sec mist"><div class="wrap">
+<div class="sec-h"><h2 class="d2">Built for your industry</h2><p>What a clinic needs online is very different from a houseboat or a bottle factory. Pick yours to see what we would build.</p></div>
+<div class="inds">{"".join(f'<a data-r href="{i[0]}"><b>{html.escape(i[1])}</b><span>{html.escape(i[2])}</span></a>' for i in INDUSTRIES)}<a data-r href="contact.html"><b>Something else?</b><span>We work with all kinds of local businesses. Tell us what you do and we'll tell you what would help.</span></a></div>
+<p style="margin-top:28px"><a class="link" href="industries.html">All industries</a></p>
 </div></section>
 
 <section class="sec ink"><div class="wrap">
@@ -602,6 +628,211 @@ inner("website-maintenance-hosting.html", "Website Maintenance & Hosting", "Your
       title="Website Maintenance & Hosting in Kerala | Ad Pro Advertising",
       desc="Website hosting, domain and SSL renewals, backups, content updates and monthly SEO checks for businesses across Kerala, from Ad Pro Advertising.")
 
+inner("social-media-management.html", "Social Media Management", "Show up every week, without doing it yourself.",
+      "A monthly plan of posters, reels and posts for Instagram, Facebook and your Google Business Profile, in Malayalam and English. We make it, you approve it, we post it.",
+      [("What you get each month", ul(["<b>A content plan</b> agreed with you at the start of the month: offers, new products or courses, festivals and everyday posts",
+            '<b>Posters and carousels</b> designed in-house to your brand (see <a href="posters-video-ads.html">Posters &amp; Video Ads</a>)',
+            "<b>Short reels</b> with Malayalam or English text, and a Malayalam voice-over where it helps",
+            "<b>Captions and hashtags</b> written for your customers, not for other businesses",
+            "<b>Posting on schedule</b> to Instagram, Facebook and your Google Business Profile",
+            "<b>A short monthly report</b>: what was posted, what people responded to and what to try next"])),
+       ("Nothing is posted without your approval", "<p>You see every post before it goes out, on WhatsApp or a shared link. Prices, offers, phone numbers and logos are checked against your own details, so a wrong number or an expired offer never goes live.</p>"),
+       ("Kerala's calendar, planned ahead", "<p>Onam, Vishu, Christmas, Eid, the school year and the wedding season all change what people buy. We plan festival posts and offers weeks ahead, so they are ready on time instead of made in a rush the night before. For many businesses the families of Gulf NRIs are a second audience at festival time, and we plan posts with them in mind.</p>"),
+       ("Posts that lead to enquiries", '<p>Every post has one clear next step: call, WhatsApp or visit. When a post does well we can turn it into an ad, and we judge both by the enquiries you get, not by likes. See <a href="meta-google-ads.html">Meta &amp; Google Ads</a>.</p>'),
+       ("Your accounts stay yours", "<p>Your Instagram, Facebook and Google accounts stay in your business's name. We work on them as a partner, and you can remove our access at any time.</p>")],
+      [("Which platforms do you post on?", "Instagram, Facebook and your Google Business Profile. We can add others, such as YouTube Shorts, if your customers are there."),
+       ("Do you reply to comments and messages?", "We tell you when something needs a reply from you, such as a price question or a complaint. Replies about your prices and services should come from your business, and WhatsApp automation can handle the common questions."),
+       ("Can you post in Malayalam?", "Yes. Posts, reels and captions can be in Malayalam, English or both, depending on who your customers are."),
+       ("Is this the same as running ads?", "No. Social media management is your regular posting. Ads are paid campaigns that reach new people. Many businesses use both, and we can run both.")],
+      "Hello Ad Pro, I'm interested in social media management.",
+      title="Social Media Management in Kerala | Ad Pro Advertising",
+      desc="Monthly posters, reels and posts for Instagram, Facebook and Google in Malayalam and English, made and posted by Ad Pro Advertising for Kerala businesses.")
+
+inner("online-booking-system.html", "Online Booking Systems", "Take bookings directly, not through a middleman.",
+      "Booking systems for homestays, houseboats, clinics, salons and classes. Customers check availability, pay a deposit by UPI and get confirmations and reminders on WhatsApp.",
+      [("What it does", ul(["<b>Live availability</b>: rooms, boats, appointment slots or class seats, updated as bookings come in",
+            "<b>Deposits or full payment</b> by UPI, card or net banking through a payment gateway in your name",
+            "<b>WhatsApp and email confirmations</b>, with reminders before the stay or appointment",
+            "<b>A day and month view for your staff</b>, so everyone sees who is coming and when",
+            "<b>Cancellation and change rules</b> set the way you work, shown to the customer before they pay",
+            "<b>Reports</b> of bookings, payments and busy periods"])),
+       ("Who it is for", ul(["<b>Homestays, houseboats and resorts</b> that want more direct bookings", "<b>Clinics, dentists and physiotherapy centres</b> taking appointments",
+            "<b>Salons, spas and Ayurveda centres</b> booking treatments", "<b>Training centres</b> booking demo classes and batches",
+            "<b>Turfs, halls and studios</b> booking by the hour"])),
+       ("More direct bookings for stays", '<p>Booking sites charge a commission on every booking. A booking system on your own website lets returning guests and people who find you on Google or Instagram book you directly. Your rooms can stay on Booking.com or Airbnb too: we can link their calendars to yours, so one booking blocks the dates everywhere and you avoid double bookings. Read more for <a href="digital-marketing-for-homestays-houseboats.html">homestays, houseboats and resorts</a>.</p>'),
+       ("Built into your website", '<p>The booking system sits inside your own website, with your name and photos, not on a separate platform. Each room, boat or service gets its own page that can be found on Google. See <a href="website-design-local-seo.html">Websites &amp; Local SEO</a>.</p>')],
+      [("Can guests pay online?", "Yes. Payments go through a payment gateway such as Razorpay, opened in your business's name, so the money goes straight to your bank account. You can take a deposit or the full amount."),
+       ("Will it clash with my Booking.com or Airbnb listing?", "It doesn't have to. Both platforms can share their calendar with your booking system, so a booking on one blocks the dates on the others. We set this up and test it with you."),
+       ("Can my staff add phone and walk-in bookings?", "Yes. Staff can add bookings by hand, so every booking is in one calendar however it arrived."),
+       ("Is there a monthly fee?", "You pay for hosting and the payment gateway's own transaction fee. We explain all running costs before we start.")],
+      "Hello Ad Pro, I'm interested in an online booking system.",
+      title="Online Booking System Development, Kerala | Ad Pro",
+      desc="Direct booking systems for homestays, houseboats, clinics and salons, with UPI deposits and WhatsApp reminders, built by Ad Pro Advertising, Kerala.")
+
+# ---------------- INDUSTRY PAGES ----------------
+SVC_NAME = {s[0]: s[1] for s in SERVICES} | {"batchboard.html": "BatchBoard"}
+def industry(path, h1, lede, needs, svcs, proof, faqs, wa_msg, title, desc):
+    name = next(i[1] for i in INDUSTRIES if i[0] == path)
+    others = "".join(f'<li><a href="{i[0]}">{html.escape(i[1])}</a></li>' for i in INDUSTRIES if i[0] != path)
+    svc_li = ul([f'<a href="{p}"><b>{html.escape(SVC_NAME[p])}</b></a>: {why}' for p, why in svcs])
+    fq = "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(a)}</p></details>" for q, a in faqs)
+    secs = f"<section><h2>What {html.escape(name.lower())} need online</h2>{ul(needs)}</section><section><h2>What we build for you</h2>{svc_li}</section><section><h2>{proof[0]}</h2>{proof[1]}</section>"
+    body = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / <a href="industries.html">Industries</a> / {html.escape(name)}</div>
+<h1 class="d1">{h1}</h1><p class="lede">{lede}</p></div></section>
+<section class="sec"><div class="wrap"><div class="layout"><div class="prose">{secs}</div>
+<aside class="side"><div class="box dark"><h2>Talk to us</h2><p>Tell us about your business on WhatsApp. We reply with what we would do first and a quote.</p>
+<a class="btn btn-sky" href="{wa(wa_msg)}" target="_blank" rel="noopener">{WA_ICON} WhatsApp us</a>
+<a class="btn btn-ghost" href="tel:{TEL}">{PHONE_ICON} Call <span class="num">{PHONE}</span></a></div>
+<div class="box"><h2>Other industries</h2><ul>{others}</ul></div></aside></div></div></section>
+<section class="sec mist"><div class="wrap"><div class="sec-h"><h2 class="d2">Questions</h2></div><div class="faq">{fq}</div></div></section>
+{cta()}'''
+    ld = [{"@type": "Service", "name": f"Digital marketing for {name}", "serviceType": "Digital marketing and software development", "url": page_url(path),
+           "description": desc, "provider": {"@id": SITE + "/#org"}, "audience": {"@type": "BusinessAudience", "name": name},
+           "areaServed": [{"@type": "State", "name": "Kerala"}, {"@type": "Country", "name": "India"}]}]
+    crumbs = {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": page_url("index.html")},
+        {"@type": "ListItem", "position": 2, "name": "Industries", "item": page_url("industries.html")},
+        {"@type": "ListItem", "position": 3, "name": name, "item": page_url(path)}]}
+    page(path, title, desc, body, ld + faq_ld(faqs) + [crumbs])
+
+industry("digital-marketing-for-training-centres.html", "Fill every batch, every month.",
+         "Websites, ads, WhatsApp automation and lobby TV apps for computer training centres, coaching centres and tuition centres across Kerala.",
+         ["A page for every course, with duration, fees and what students can do at the end", "Ads that bring admissions, not just cheap chats",
+          "Fast replies when parents and students ask about fees on WhatsApp, including in the evening", "A way to see which ad each admission came from",
+          "Posters and reels for admission season, results and new batches", "Something that makes the centre look organised when parents visit"],
+         [("website-design-local-seo.html", "course pages with fees and Course structured data, so you show up when people search for a course near them"),
+          ("meta-google-ads.html", "admission campaigns checked every day against your own enquiry sheet"),
+          ("whatsapp-business-automation.html", "instant answers to fee and timing questions that match your website exactly"),
+          ("social-media-management.html", "regular posts for results, new batches and admission dates"),
+          ("batchboard.html", "live batch attendance on your lobby TV, with your ads in between"),
+          ("custom-software-development.html", "enquiry trackers and staff target dashboards")],
+         ("Our work with a training centre", '<p>For G-TEC Computer Education in Charummood we rebuilt the website and kept its Google rankings, ran Facebook and Instagram admission campaigns, made Malayalam reels, built a WhatsApp auto-reply engine that quotes the same fees as the website, and created the lobby TV attendance app that became <a href="batchboard.html">BatchBoard</a>. See the full project in <a href="work.html#gtec">our work</a>.</p>'),
+         [("We are a franchise centre. Can you still help?", "Yes. We follow the head office's brand rules and swap their corporate phone number and website for yours on every creative, so enquiries come to your centre."),
+          ("Can ads bring admissions for a single course?", "Yes. We usually run one campaign per course or batch, so you can see which course the enquiries are for and what each one costs."),
+          ("Do we need BatchBoard to work with you?", "No. BatchBoard is a separate product. You can use any of our services on its own.")],
+         "Hello Ad Pro, I run a training centre and would like to discuss marketing.",
+         "Digital Marketing for Training Centres in Kerala | Ad Pro",
+         "Websites, admission ads, WhatsApp automation and lobby TV attendance for computer training and coaching centres across Kerala, from Ad Pro Advertising.")
+
+industry("digital-marketing-for-clinics.html", "Be the clinic patients find first.",
+         "Google Maps visibility, reviews, appointment booking and patient-friendly websites for clinics, dentists, physiotherapy centres and home-care services in Kerala.",
+         ["To show up on Google Maps when someone nearby searches for a doctor, dentist or home nurse", "A steady flow of honest reviews from real patients",
+          "Easy appointments by phone, WhatsApp or online booking", "A website that lists every treatment, the doctors and the timings clearly",
+          "Advertising that stays within the rules for health services", "Answers to common questions without tying up the front desk"],
+         [("website-design-local-seo.html", "a page for every treatment and service, with structured data for medical businesses and Google Business Profile set-up"),
+          ("online-booking-system.html", "appointment booking with WhatsApp reminders, so fewer patients miss their slot"),
+          ("whatsapp-business-automation.html", "instant replies about timings, location and which doctor is in today"),
+          ("social-media-management.html", "health tips, doctor introductions and clinic news posted regularly"),
+          ("website-maintenance-hosting.html", "timings, doctors and fees kept up to date on the site and on Google")],
+         ("Our work in healthcare", '<p>For Hannah Home Care and Rehabilitation Centre in Bengaluru we built a 21-page website with a page for each service, from home nursing procedures to physiotherapy and baby care, plus eight locality pages and home-health structured data. See the full project in <a href="work.html#hannah">our work</a>.</p>'),
+         [("Are there rules on advertising for doctors and clinics?", "Yes. Medical councils and advertising standards limit what doctors and health services can claim. We keep wording factual, avoid promises of cures or results, and check claims with you before anything is published."),
+          ("Can patients book appointments online?", "Yes. We can add an online booking system with slots for each doctor, or keep it simple with a WhatsApp booking button."),
+          ("How do we get more Google reviews?", "By asking every satisfied patient at the right moment, with a direct link to your review page. We set up the link and a simple routine for your front desk. We never write or buy reviews.")],
+         "Hello Ad Pro, I run a clinic and would like to discuss marketing.",
+         "Digital Marketing for Clinics & Home Care in Kerala | Ad Pro",
+         "Google Maps visibility, reviews, appointment booking and websites for clinics, dentists, physiotherapy and home-care services in Kerala, from Ad Pro Advertising.")
+
+industry("digital-marketing-for-homestays-houseboats.html", "More direct bookings, less commission.",
+         "Booking websites, Google visibility, reels and ads for homestays, houseboats, resorts and Ayurveda stays, from a team based in Alappuzha.",
+         ["A website guests trust enough to book on directly", "Real availability and online payment, so guests don't have to wait for a reply",
+          "To show up on Google Maps and Google search, not only on booking apps", "Photos and reels that show the place honestly",
+          "Fast answers to guests' questions in English, Malayalam and other languages", "Fewer double bookings across Booking.com, Airbnb and phone bookings"],
+         [("online-booking-system.html", "direct booking with UPI deposits, WhatsApp confirmations and calendars linked to your booking-site listings"),
+          ("website-design-local-seo.html", "a fast website with a page for each room, boat or package, written for what travellers search"),
+          ("posters-video-ads.html", "reels and photos edited for Instagram, where many travellers find stays"),
+          ("meta-google-ads.html", "ads aimed at travellers planning trips to Kerala, and at past guests"),
+          ("ai-chatbot-development.html", "an assistant that answers questions about rooms, food, check-in and getting there, at any hour")],
+         ("Built in Alappuzha", '<p>We are based in Charummood, Alappuzha, so backwaters, houseboats and homestays are on our doorstep. We are building our first projects in this sector. If you would like to be one of them, message us and we will show you what we would build for your property.</p>'),
+         [("Should I leave Booking.com and Airbnb?", "No. Booking sites bring guests who would never find you otherwise. The aim is to win more direct bookings from returning guests and people who already found you, while keeping your listings."),
+          ("Can guests pay a deposit online?", "Yes, by UPI, card or net banking through a payment gateway in your name, with the balance paid on arrival if you prefer."),
+          ("Do you photograph the property?", "We edit and design with your photos and videos, and can advise on what to shoot. Tell us if you need a photographer and we will discuss it.")],
+         "Hello Ad Pro, I run a homestay or houseboat and would like more direct bookings.",
+         "Homestay & Houseboat Marketing, Kerala | Ad Pro Advertising",
+         "Booking websites, Google visibility, reels and ads for homestays, houseboats, resorts and Ayurveda stays in Kerala, from Ad Pro Advertising, Alappuzha.")
+
+industry("digital-marketing-for-manufacturers.html", "Win bulk orders from across Kerala.",
+         "Websites, product pages and district pages that bring wholesale and bulk enquiries to manufacturers, distributors and traders.",
+         ["A product page for each item, with sizes, materials and minimum order quantities", "To show up when buyers in other districts search for a supplier",
+          "A quote form that collects everything you need to price an order", "A professional site that big buyers take seriously",
+          "Order, stock and dispatch tracking that doesn't depend on one person's notebook"],
+         [("website-design-local-seo.html", "product pages with Product structured data, plus a page for each district you deliver to"),
+          ("ecommerce-website-development.html", "online ordering and payment for smaller or repeat orders"),
+          ("whatsapp-business-automation.html", "quote requests that arrive on WhatsApp with every detail filled in"),
+          ("custom-software-development.html", "order, stock and dispatch tracking with a dashboard for the owner"),
+          ("meta-google-ads.html", "Google search ads for buyers actively looking for a supplier")],
+         ("Our work with a manufacturer", '<p>For S&amp;G Polymers, a PET bottle manufacturer in Punnapara, Alappuzha, we built a 16-page website with product pages for the 20 litre jar, 1 litre and 500 ml bottles, a Kerala delivery page plus six district pages, and a quote form that writes the order into WhatsApp. See the project in <a href="work.html#sg">our work</a>.</p>'),
+         [("Our buyers are businesses, not the public. Does a website still help?", "Yes. Business buyers search Google for suppliers too, often by product and district. A clear site with product details and a quick quote form makes you easy to shortlist."),
+          ("Can you show our prices?", "Only if you want to. Many manufacturers show sizes and minimum quantities and ask for a quote, because prices depend on volume."),
+          ("Can we take orders online?", "Yes, for standard orders. Bulk and custom orders usually work better as a quote request.")],
+         "Hello Ad Pro, I run a manufacturing or trading business and would like to discuss a website.",
+         "Websites & SEO for Manufacturers, Kerala | Ad Pro",
+         "Product pages, district pages and quote forms that bring bulk enquiries to manufacturers, distributors and traders across Kerala, from Ad Pro Advertising.")
+
+industry("digital-marketing-for-food-businesses.html", "Make people hungry, then make ordering easy.",
+         "Google listings, menus, WhatsApp ordering, reels and online stores for restaurants, bakeries, home bakers, cloud kitchens and food brands in Kerala.",
+         ["To show up on Google Maps with photos, menu and opening hours that are right", "Reels and posters that make people want to order today",
+          "Orders on WhatsApp or a simple online menu, without paying commission on every order", "Pre-orders for festivals and cake orders with the details captured correctly",
+          "Your FSSAI details shown where customers and platforms expect them"],
+         [("website-design-local-seo.html", "a fast menu website and a properly set up Google Business Profile"),
+          ("ecommerce-website-development.html", "an online menu or store with UPI payment and delivery charges by area"),
+          ("social-media-management.html", "regular posts and reels, with festival menus planned ahead"),
+          ("whatsapp-business-automation.html", "order taking, menu and price replies, and pick-up or delivery confirmations"),
+          ("meta-google-ads.html", "local ads around your delivery area")],
+         ("New in this sector", '<p>Food is the biggest group of new manufacturing businesses in Kerala, and many of them sell through Instagram and WhatsApp. We are building our first projects for food businesses. If you would like to be one of them, message us and we will show you what we would build for you.</p>'),
+         [("I'm a home baker. Is this too much for me?", "No. Many home bakers start with a Google listing, a simple menu page and a WhatsApp order button. You can add more as orders grow."),
+          ("Can you help us rely less on delivery apps?", "We can give regular customers a direct way to order from you, on WhatsApp or your own site, while you stay on the apps for new customers."),
+          ("Do you write menus and posts in Malayalam?", "Yes. Menus, posters and reels can be in Malayalam, English or both.")],
+         "Hello Ad Pro, I run a food business and would like to discuss marketing.",
+         "Digital Marketing for Food Businesses in Kerala | Ad Pro",
+         "Google listings, WhatsApp ordering, online menus, reels and ads for restaurants, bakeries, home bakers and cloud kitchens in Kerala, from Ad Pro Advertising.")
+
+industry("digital-marketing-for-study-abroad-consultants.html", "Leads from students who are ready to apply.",
+         "Websites, ads, enquiry tracking and WhatsApp follow-up for study abroad consultants and language training centres in Kerala.",
+         ["Clear pages for each country, course and intake, with honest information", "Ads that reach students and parents at the right time before each intake",
+          "Every enquiry recorded with its source, stage and next follow-up date", "Fast WhatsApp replies, because students contact several consultants at once",
+          "Trust: real office details, registrations and a clear process, not big promises"],
+         [("website-design-local-seo.html", "country and course pages written for what students and parents search"),
+          ("meta-google-ads.html", "campaigns timed around intakes and test dates, checked against your enquiry sheet"),
+          ("custom-software-development.html", "a lead tracker with stages from first enquiry to visa, and follow-up reminders for counsellors"),
+          ("whatsapp-business-automation.html", "instant replies about countries, courses, tests and documents, handing over to a counsellor"),
+          ("ai-chatbot-development.html", "an assistant that answers common questions from your approved information")],
+         ("How we approach this sector", '<p>Families in Kerala put a lot of money and trust into studying abroad. We write pages and ads that are clear about costs, requirements and timelines, and we do not promise admissions, visas or jobs. The same enquiry tracking we built for <a href="work.html#gtec">G-TEC Computer Education</a> shows which ads bring students who go on to enrol.</p>'),
+         [("Can you guarantee a number of leads?", "No. We can't honestly guarantee numbers. We show you the cost per enquiry every week and improve what works."),
+          ("Will the ads mention visa success rates?", "Only figures you can prove, and never promises of admission or a visa. Misleading claims put your business and your students at risk."),
+          ("Can counsellors use the lead tracker on their phones?", "Yes. It runs in the browser on phones and computers.")],
+         "Hello Ad Pro, I run a study abroad consultancy and would like to discuss marketing.",
+         "Marketing for Study Abroad Consultants in Kerala | Ad Pro",
+         "Country and course pages, intake ads, lead tracking and WhatsApp follow-up for study abroad consultants in Kerala, from Ad Pro Advertising.")
+
+industry("digital-marketing-for-real-estate.html", "Reach buyers in Kerala and the Gulf.",
+         "Project websites, ads and lead follow-up for builders, developers and real estate agents, including NRI buyers researching from abroad.",
+         ["A project page with plans, specifications, location, progress photos and the RERA registration number", "To reach NRI buyers who research online for months before deciding",
+          "Video walkthroughs and progress updates buyers abroad can trust", "Leads followed up quickly, with time zones in mind",
+          "Ads that follow the rules on what real estate promotions must show"],
+         [("website-design-local-seo.html", "a page for each project and locality, written for what buyers search"),
+          ("meta-google-ads.html", "campaigns aimed at buyers in Kerala and at NRIs in the Gulf"),
+          ("posters-video-ads.html", "walkthrough videos, progress reels and project creatives"),
+          ("custom-software-development.html", "a lead tracker for your sales team, with site-visit and follow-up dates"),
+          ("whatsapp-business-automation.html", "instant replies with brochures, prices and location, at any hour")],
+         ("How we approach this sector", '<p>Buyers abroad can\'t visit easily, so trust comes from detail: the RERA number, real progress photos, clear specifications and a team that answers quickly. We build every project page around that. We are taking on our first real estate projects, and we will show you what we would build for yours.</p>'),
+         [("Do you include the RERA number in ads?", "Yes. Registered projects show their K-RERA registration details on the project page and in ads, as the rules require."),
+          ("Can you target Malayalis in the Gulf?", "Yes. Meta and Google ads can be aimed at people in Gulf countries with an interest in Kerala, in English or Malayalam."),
+          ("We are a small agent, not a builder. Can you help?", "Yes. Agents benefit from locality pages and a good Google Business Profile, so buyers searching a town find you first.")],
+         "Hello Ad Pro, I'm in real estate and would like to discuss marketing.",
+         "Real Estate Marketing in Kerala, incl. NRI Buyers | Ad Pro",
+         "Project websites, NRI-focused ads, walkthrough videos and lead follow-up for builders and real estate agents in Kerala, from Ad Pro Advertising.")
+
+ind_cards = "".join(f'<a data-r href="{i[0]}"><span class="d3">{html.escape(i[1])}</span><p>{html.escape(i[2])}</p><span class="go">{ARROW}</span></a>' for i in INDUSTRIES)
+industries_body = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / Industries</div>
+<h1 class="d1">Built for how your industry works.</h1><p class="lede">A clinic, a houseboat and a bottle factory need very different things from the internet. These are the businesses we work with across Kerala, and what we build for each.</p></div></section>
+<section class="sec"><div class="wrap"><nav class="svc" aria-label="Industries">{ind_cards}</nav>
+<p style="margin-top:32px">Don't see your industry? We work with all kinds of local businesses. <a class="link" href="services.html">See all services</a></p></div></section>
+{cta()}'''
+page("industries.html", "Industries We Serve in Kerala | Ad Pro Advertising",
+     "Digital marketing, websites and automation for training centres, clinics, homestays, manufacturers, food businesses, consultants and real estate in Kerala.",
+     industries_body, [{"@type": "ItemList", "name": "Industries Ad Pro Advertising serves", "itemListElement": [
+         {"@type": "ListItem", "position": n + 1, "name": i[1], "url": page_url(i[0])} for n, i in enumerate(INDUSTRIES)]}] + crumbs_ld("Industries", "industries.html"))
+
 # ---------------- SERVICES OVERVIEW ----------------
 services_body = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / Services</div>
 <h1 class="d1">Everything a local business needs online.</h1><p class="lede">Websites, ads and creatives that bring people to you, plus the automation, apps and software that handle the work behind them. All of it is done by one team in Charummood, Alappuzha, for businesses across Kerala and beyond.</p></div></section>
@@ -720,7 +951,7 @@ shutil.copy("site.css", f"{OUT}/site.css")
 shutil.copy("site.js", f"{OUT}/site.js")
 shutil.copy("../lenis.min.js", f"{OUT}/lenis.min.js")
 shutil.copytree("blog-img", f"{OUT}/blog/img", dirs_exist_ok=True)
-pages = ["index.html", "services.html"] + [s[0] for s in SERVICES] + ["batchboard.html", "work.html", "about.html", "contact.html", BLOG] + [post_url(p) for p in POSTS]
+pages = ["index.html", "services.html"] + [s[0] for s in SERVICES] + ["industries.html"] + [i[0] for i in INDUSTRIES] + ["batchboard.html", "work.html", "about.html", "contact.html", BLOG] + [post_url(p) for p in POSTS]
 sm = "".join(f"<url><loc>{page_url(p)}</loc><lastmod>{LASTMOD}</lastmod></url>" for p in pages)
 open(f"{OUT}/sitemap.xml", "w").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n')
 open(f"{OUT}/robots.txt", "w").write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")

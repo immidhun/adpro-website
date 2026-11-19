@@ -61,7 +61,7 @@ h1,h2,h3{margin:0}
 .dd-panel a b{display:block;font-weight:700}
 .dd-panel a span{font-size:.88rem;color:var(--steel)}
 .dd-panel a:hover{background:var(--mist)}
-.dd-panel{width:min(660px,calc(100vw - 40px))}
+.dd-panel{width:min(660px,calc(100vw - 40px));max-height:calc(100vh - 90px);overflow-y:auto}
 .dd-cols a{padding:8px 14px}.dd-cols a span{display:block;line-height:1.35;margin-top:2px}
 .dd-cols{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}
 .dd-h{margin:6px 14px 4px;font:700 .74rem/1.2 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
@@ -174,7 +174,13 @@ ol.steps{margin:0;padding:0}
 
 /* footer */
 .ft{background:#000;color:#c4cbd2;padding:64px 0 110px;font-size:.95rem}
-.ft .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.ft .cols{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px}
+.inds{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.inds a{display:block;background:#fff;border:1px solid var(--line);padding:22px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .2s}
+.inds a b{display:block;font:700 1.2rem/1.2 var(--disp);letter-spacing:-.01em;margin-bottom:8px}
+.inds a span{display:block;color:#3a4048;font-size:.95rem;line-height:1.5}
+.inds a:hover{border-color:var(--ink);transform:translateY(-2px)}
+.inds a:hover b{color:var(--deep)}
 .ft img{width:180px;margin-bottom:18px}
 .ft h3{color:#fff;font-size:1rem;margin-bottom:14px}
 .ft ul{list-style:none;margin:0;padding:0}
