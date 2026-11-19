@@ -13,7 +13,7 @@ PHONE = "75609 21593"
 TEL = "+917560921593"
 OUT = "dist"
 YEAR = 2026
-LASTMOD = "2026-11-18"   # update when pages change; used in the sitemap
+LASTMOD = "2026-11-19"   # update when pages change; used in the sitemap
 ASSET_V = "8"            # bump when site.css or site.js changes
 
 # Fill these in once confirmed. They must match the Google Business Profile exactly.
@@ -21,8 +21,10 @@ ASSET_V = "8"            # bump when site.css or site.js changes
 BUSINESS = {
     "street": "2nd Floor, Nebo Tower, KP Road", "postal": "690505", "lat": "9.17304", "lng": "76.60624",   # lat/lng: at least 5 decimal places
     "maps_url": "https://www.google.com/maps/search/?api=1&query=Nebo+Tower%2C+KP+Road%2C+Charummoodu%2C+Kerala+690505",   # replace with the Business Profile link once it exists
-    "hours": [],  # e.g. [{"days": ["Monday", "Tuesday"], "opens": "09:00", "closes": "18:00"}]
+    "hours": [{"days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "10:00", "closes": "17:00"},
+              {"days": ["Saturday"], "opens": "10:00", "closes": "16:30"}],   # days not listed are closed
 }
+HOURS_TEXT = "Monday to Friday, 10 am to 5 pm<br>Saturday, 10 am to 4:30 pm<br>Sunday closed"
 
 ADDRESS = f'{BUSINESS["street"]}, Charummood, Alappuzha, Kerala {BUSINESS["postal"]}'
 
@@ -203,7 +205,8 @@ def footer():
 <div class="cols">
 <div><a href="index.html" aria-label="Ad Pro Advertising, home"><img src="logo-reverse.svg" width="180" height="85" alt="Ad Pro Digital Marketing"></a>
 <p>Websites, local SEO, ads, posters, video and apps for businesses across Kerala and beyond.</p>
-<p>{ADDRESS}</p></div>
+<p>{ADDRESS}</p>
+<p>{HOURS_TEXT}</p></div>
 <div><h3>Services</h3><ul>{svc}</ul></div>
 <div><h3>Contact</h3><ul>
 <li>Call or WhatsApp<br><a class="num" href="tel:{TEL}" style="color:#fff;font-size:1.3rem">{PHONE}</a></li>
@@ -505,7 +508,7 @@ contact = f'''<section class="ph">{hands_svg("cs")}<div class="wrap"><div class=
 </form>
 <aside class="side"><div class="box dark"><h2>Call or WhatsApp</h2><p><a class="num" href="tel:{TEL}" style="color:#fff;font-size:1.7rem;text-decoration:none">{PHONE}</a></p>
 <a class="btn btn-sky" href="{wa()}" target="_blank" rel="noopener">{WA_ICON} WhatsApp us</a></div>
-<div class="box"><h2>Find us</h2><p style="margin:0">{ADDRESS}</p><p style="margin:10px 0 0"><a class="link" href="{BUSINESS["maps_url"]}" target="_blank" rel="noopener">Open in Google Maps</a></p><p class="small" style="margin:10px 0 0">Instagram <a class="link" href="https://www.instagram.com/adpro_advt/" target="_blank" rel="noopener">@adpro_advt</a></p></div></aside>
+<div class="box"><h2>Find us</h2><p style="margin:0">{ADDRESS}</p><p style="margin:10px 0 0"><b>Open</b><br>{HOURS_TEXT}</p><p style="margin:10px 0 0"><a class="link" href="{BUSINESS["maps_url"]}" target="_blank" rel="noopener">Open in Google Maps</a></p><p class="small" style="margin:10px 0 0">Instagram <a class="link" href="https://www.instagram.com/adpro_advt/" target="_blank" rel="noopener">@adpro_advt</a></p></div></aside>
 </div></div></section>'''
 page("contact.html", "Contact Ad Pro Advertising | Call or WhatsApp 75609 21593", "Call or WhatsApp Ad Pro Advertising on 75609 21593, or visit us at Nebo Tower, KP Road, Charummood, Alappuzha. We work with businesses across Kerala.", contact, crumbs_ld("Contact", "contact.html"))
 
